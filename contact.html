@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,9 +8,13 @@
   <meta name="description" content="Contact details for Siddharth Paul.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital@0;1&family=Lora:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital@0;1&family=Lora:ital,wght@0,400;0,700;1,400&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <script src="theme.js"></script>
 </head>
+
 <body>
 
   <nav>
@@ -21,36 +26,63 @@
       <a href="now.html">now</a>
       <a href="contact.html" class="active">contact</a>
     </div>
+    <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
+      <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="5"></circle>
+        <line x1="12" y1="1" x2="12" y2="3"></line>
+        <line x1="12" y1="21" x2="12" y2="23"></line>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+        <line x1="1" y1="12" x2="3" y2="12"></line>
+        <line x1="21" y1="12" x2="23" y2="12"></line>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+      </svg>
+      <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+    </button>
   </nav>
 
   <div class="content-wrapper">
     <main>
-      <h1>Contact</h1>
-      
+      <h1>Contact / Social Links</h1>
+
       <ul class="contact-list" style="list-style: none; padding: 0;">
         <li style="margin-bottom: 1rem; display: flex;">
-          <span class="contact-label" style="font-family: var(--font-mono); width: 100px; flex-shrink: 0; color: #555;">Email:</span>
+          <span class="contact-label"
+            style="font-family: var(--font-mono); width: 100px; flex-shrink: 0; color: #555;">Email:</span>
           <a href="mailto:codesiddharth2005@gmail.com" class="mono-link">codesiddharth2005@gmail.com</a>
         </li>
         <li style="margin-bottom: 1rem; display: flex;">
-          <span class="contact-label" style="font-family: var(--font-mono); width: 100px; flex-shrink: 0; color: #555;">GitHub:</span>
-          <a href="https://github.com/siddharthpaul2005" target="_blank" class="mono-link">github.com/siddharthpaul2005</a>
+          <span class="contact-label"
+            style="font-family: var(--font-mono); width: 100px; flex-shrink: 0; color: #555;">GitHub:</span>
+          <a href="https://github.com/siddharthpaul2005" target="_blank"
+            class="mono-link">github.com/siddharthpaul2005</a>
         </li>
         <li style="margin-bottom: 1rem; display: flex;">
-          <span class="contact-label" style="font-family: var(--font-mono); width: 100px; flex-shrink: 0; color: #555;">LinkedIn:</span>
-          <a href="https://www.linkedin.com/in/siddharth-paul-00ab59278" target="_blank" class="mono-link">linkedin.com/in/siddharth-paul-00ab59278</a>
+          <span class="contact-label"
+            style="font-family: var(--font-mono); width: 100px; flex-shrink: 0; color: #555;">LinkedIn:</span>
+          <a href="https://www.linkedin.com/in/siddharth-paul-00ab59278" target="_blank"
+            class="mono-link">linkedin.com/in/siddharth-paul-00ab59278</a>
         </li>
         <li style="margin-bottom: 1rem; display: flex;">
-          <span class="contact-label" style="font-family: var(--font-mono); width: 100px; flex-shrink: 0; color: #555;">Medium:</span>
+          <span class="contact-label"
+            style="font-family: var(--font-mono); width: 100px; flex-shrink: 0; color: #555;">Medium:</span>
           <a href="https://medium.com/@paulsiddharth" target="_blank" class="mono-link">medium.com/@paulsiddharth</a>
         </li>
         <li style="margin-bottom: 1rem; display: flex;">
-          <span class="contact-label" style="font-family: var(--font-mono); width: 100px; flex-shrink: 0; color: #555;">X:</span>
+          <span class="contact-label"
+            style="font-family: var(--font-mono); width: 100px; flex-shrink: 0; color: #555;">X:</span>
           <a href="https://x.com/SiddharthP29523" target="_blank" class="mono-link">x.com/SiddharthP29523</a>
         </li>
         <li style="margin-bottom: 1rem; display: flex;">
-          <span class="contact-label" style="font-family: var(--font-mono); width: 100px; flex-shrink: 0; color: #555;">LeetCode:</span>
-          <a href="https://leetcode.com/u/codesiddharth2005/" target="_blank" class="mono-link">leetcode.com/u/codesiddharth2005</a>
+          <span class="contact-label"
+            style="font-family: var(--font-mono); width: 100px; flex-shrink: 0; color: #555;">LeetCode:</span>
+          <a href="https://leetcode.com/u/codesiddharth2005/" target="_blank"
+            class="mono-link">leetcode.com/u/codesiddharth2005</a>
         </li>
       </ul>
 
@@ -59,16 +91,36 @@
     <footer>
       <div class="footer-socials">
         <a href="mailto:codesiddharth2005@gmail.com" title="Email" aria-label="Email">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+            <polyline points="22,6 12,13 2,6"></polyline>
+          </svg>
         </a>
         <a href="https://x.com/SiddharthP29523" target="_blank" title="X (Twitter)" aria-label="X (Twitter)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l11.733 16h4.267l-11.733 -16zM11 10.5l-6.5 -6.5h-4l8.5 8.5zM22 4h-4l-6.5 8.5h4zM15.5 13.5l6.5 6.5h-4l-8.5 -8.5z" stroke="none" fill="currentColor"></path></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path
+              d="M4 4l11.733 16h4.267l-11.733 -16zM11 10.5l-6.5 -6.5h-4l8.5 8.5zM22 4h-4l-6.5 8.5h4zM15.5 13.5l6.5 6.5h-4l-8.5 -8.5z"
+              stroke="none" fill="currentColor"></path>
+          </svg>
         </a>
-        <a href="https://www.linkedin.com/in/siddharth-paul-00ab59278" target="_blank" title="LinkedIn" aria-label="LinkedIn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+        <a href="https://www.linkedin.com/in/siddharth-paul-00ab59278" target="_blank" title="LinkedIn"
+          aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+            <rect x="2" y="9" width="4" height="12"></rect>
+            <circle cx="4" cy="4" r="2"></circle>
+          </svg>
         </a>
         <a href="https://github.com/siddharthpaul2005" target="_blank" title="GitHub" aria-label="GitHub">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path
+              d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+            </path>
+          </svg>
         </a>
       </div>
       <div class="footer-bottom">
@@ -79,4 +131,5 @@
   </div>
 
 </body>
+
 </html>
