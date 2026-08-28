@@ -94,7 +94,7 @@ We'll run it at `n=4, f=1` (satisfies 3f+1) and then at `n=3, f=1` (violates it)
 
 *Press enter or click to view image in full size*
 
-<div class="demo-embed">
+<div class="demo-embed" data-width="800" data-height="560">
   <iframe src="./consensus-demo.html" height="480" loading="lazy" title="Consensus simulation"></iframe>
 </div>
 
@@ -220,7 +220,7 @@ This is *the exact number quoted in Tendermint and Ethereum's Casper FFG design 
 
 *Press enter or click to view image in full size*
 
-<div class="demo-embed">
+<div class="demo-embed" data-width="800" data-height="560">
   <iframe src="./equivocation-demo.html" height="480" loading="lazy" title="Equivocation attack simulation"></iframe>
 </div>
 

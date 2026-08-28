@@ -64,21 +64,19 @@
 .demo-embed {
   position: relative;
   margin: 32px 0;
-  height: 480px;              /* THIS is the real visible height you want */
   overflow: hidden;
   border-radius: 8px;
   border: 1px solid rgba(128, 128, 128, 0.25);
+  /* height is set dynamically by JS below */
 }
 
 .demo-embed iframe {
   position: absolute;
   top: 0;
   left: 0;
-  width: 133.33%;             /* 100 / scale factor */
-  height: 640px;              /* 480 / scale factor, matches .demo-embed height / scale */
-  transform: scale(0.75);
   transform-origin: top left;
   border: none;
+  /* width/height/transform set dynamically by JS */
 }
 
 .post-content blockquote {

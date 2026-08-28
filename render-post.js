@@ -24,6 +24,39 @@ async function renderPost() {
   document.querySelectorAll('pre code').forEach(block => {
     hljs.highlightElement(block);
   });
+
+  document.getElementById('post-body').innerHTML = marked.parse(body);
+
+  document.querySelectorAll('pre code').forEach(block => {
+    hljs.highlightElement(block);
+  });
+
+  scaleDemoEmbeds();   
+
 }
+
+
+function scaleDemoEmbeds() {
+  document.querySelectorAll('.demo-embed').forEach(wrapper => {
+    const iframe = wrapper.querySelector('iframe');
+    const designWidth = parseInt(wrapper.dataset.width, 10) || 800;
+    const designHeight = parseInt(wrapper.dataset.height, 10) || 560;
+
+    const containerWidth = wrapper.clientWidth || wrapper.parentElement.clientWidth;
+
+    // Only boost size on wider screens where there's room to spare.
+    // Below 500px, fit exactly so nothing clips off the edge.
+    const SIZE_MULTIPLIER = containerWidth < 500 ? 1.0 : 1.15;
+
+    const scale = (containerWidth / designWidth) * SIZE_MULTIPLIER;
+
+    iframe.style.width = designWidth + 'px';
+    iframe.style.height = designHeight + 'px';
+    iframe.style.transform = `scale(${scale})`;
+
+    wrapper.style.height = (designHeight * scale) + 'px';
+  });
+}
+window.addEventListener('resize', scaleDemoEmbeds);
 
 renderPost();
