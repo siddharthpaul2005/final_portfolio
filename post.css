@@ -1,0 +1,98 @@
+/* Article-specific styles. Loaded ON TOP of styles.css — reuses your theme variables. */
+
+.post-wrapper {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 0 0 100px;
+}
+
+.post-nav-back {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  margin-bottom: 40px;
+  display: inline-block;
+}
+
+.post-content h1 {
+  font-family: 'Lora', serif;
+  font-size: 2.3rem;
+  line-height: 1.25;
+  margin-bottom: 8px;
+}
+
+.post-meta {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  opacity: 0.6;
+  margin-bottom: 40px;
+}
+
+.post-content h2 {
+  font-family: 'Lora', serif;
+  font-size: 1.5rem;
+  margin-top: 44px;
+  margin-bottom: 14px;
+}
+
+.post-content p {
+  font-family: 'Lora', serif;
+  font-size: 1.08rem;
+  line-height: 1.75;
+  margin: 20px 0;
+}
+
+.post-content pre {
+  background: rgba(128, 128, 128, 0.08);
+  border: 1px solid rgba(128, 128, 128, 0.2);
+  border-radius: 8px;
+  padding: 18px;
+  overflow-x: auto;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.83rem;
+  line-height: 1.6;
+}
+
+.post-content code {
+  font-family: 'IBM Plex Mono', monospace;
+  background: rgba(128, 128, 128, 0.12);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+.post-content pre code { background: none; padding: 0; }
+
+.demo-embed {
+  position: relative;
+  margin: 32px 0;
+  height: 480px;              /* THIS is the real visible height you want */
+  overflow: hidden;
+  border-radius: 8px;
+  border: 1px solid rgba(128, 128, 128, 0.25);
+}
+
+.demo-embed iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 133.33%;             /* 100 / scale factor */
+  height: 640px;              /* 480 / scale factor, matches .demo-embed height / scale */
+  transform: scale(0.75);
+  transform-origin: top left;
+  border: none;
+}
+
+.post-content blockquote {
+  border-left: 3px solid rgba(128, 128, 128, 0.3);
+  padding-left: 18px;
+  opacity: 0.75;
+  margin: 22px 0;
+}
+
+.post-content img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 32px auto;
+  border-radius: 8px;
+  border: 1px solid rgba(128, 128, 128, 0.2);
+}

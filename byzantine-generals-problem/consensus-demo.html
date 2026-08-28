@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Byzantine Consensus Visualizer</title>
+<style>
+  body { background:#0b0f1a; margin:0; padding:24px; }
+  .bft-wrap { background:#0b0f1a; border:1px solid #1f2a44; border-radius:12px; padding:24px; font-family:'Courier New',monospace; color:#e6e6e6; max-width:760px; margin:0 auto; }
+  .bft-controls { display:flex; gap:14px; align-items:center; margin-bottom:14px; flex-wrap:wrap; font-size:13px; }
+  .bft-controls button, .bft-controls select { background:#1a2236; color:#e6e6e6; border:1px solid #3a4a6b; border-radius:6px; padding:8px 14px; cursor:pointer; font-family:inherit; }
+  .bft-controls button:hover { background:#24304d; }
+  .bft-controls label { display:flex; align-items:center; gap:6px; }
+  #bftCanvas { display:block; background:#0b0f1a; border-radius:8px; margin:0 auto; }
+  .bft-hint { font-size:12px; color:#8a94ab; margin-bottom:10px; }
+  .bft-status { margin-top:12px; font-size:14px; min-height:24px; font-weight:bold; }
+  .bft-status.agree { color:#4ade80; }
+  .bft-status.disagree { color:#f87171; }
+  .bft-formula { font-size:13px; color:#93c5fd; margin-top:4px; }
+  table.tally { border-collapse:collapse; margin-top:14px; font-size:12px; width:100%; }
+  table.tally th, table.tally td { border:1px solid #263557; padding:4px 8px; text-align:center; }
+  table.tally th { background:#141b2e; }
+  .tag-honest { color:#4ade80; }
+  .tag-byz { color:#f87171; }
+</style>
+</head>
+<body>
+<div class="bft-wrap">
+  <div class="bft-controls">
+    <label>Total nodes (n):
+      <select id="nSelect">
+        <option value="4">4</option><option value="5">5</option><option value="6">6</option>
+        <option value="7" selected>7</option><option value="9">9</option><option value="10">10</option>
+      </select>
+    </label>
+    <label><input type="checkbox" id="worstCase" checked> Worst-case lying (not random)</label>
+    <button id="runBtn">▶ Run Round</button>
+    <button id="resetBtn">↺ Reset</button>
+  </div>
+  <div class="bft-hint">Click any green node to mark it Byzantine (red). Click a red node to make it honest again.</div>
+  <canvas id="bftCanvas" width="700" height="440"></canvas>
+  <div class="bft-formula" id="bftFormula"></div>
+  <div class="bft-status" id="bftStatus">Click nodes to set f, then press "Run Round".</div>
+  <table class="tally" id="tallyTable" style="display:none;">
+    <thead><tr><th>Node</th><th>Type</th><th>Votes TRUE</th><th>Votes FALSE</th><th>Decision</th></tr></thead>
+    <tbody id="tallyBody"></tbody>
+  </table>
+</div>
+<script>
+(function() {
+  const canvas = document.getElementById('bftCanvas');
+  const ctx = canvas.getContext('2d');
+  const nSelect = document.getElementById('nSelect');
+  const worstCaseBox = document.getElementById('worstCase');
+  const runBtn = document.getElementById('runBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const statusEl = document.getElementById('bftStatus');
+  const formulaEl = document.getElementById('bftFormula');
+  const tallyTable = document.getElementById('tallyTable');
+  const tallyBody = document.getElementById('tallyBody');
+  const W = canvas.width, H = canvas.height, CX = W/2, CY = H/2 - 10, R = 160;
+  let nodes = [], messages = [], trails = [], animId = null, animating = false;
+
+  function layoutNodes(n) {
+    const prevByz = new Set(nodes.filter(nd => nd.byzantine).map(nd => nd.id));
+    nodes = [];
+    for (let i = 0; i < n; i++) {
+      const angle = (i / n) * Math.PI * 2 - Math.PI / 2;
+      nodes.push({ id:i, x:CX+R*Math.cos(angle), y:CY+R*Math.sin(angle),
+        byzantine: prevByz.has(i) && i < n, decision:null, votesTrue:0, votesFalse:0 });
+    }
+  }
+  function fCount() { return nodes.filter(nd => nd.byzantine).length; }
+  function updateFormula() {
+    const n = nodes.length, f = fCount(), threshold = 3*f+1, satisfies = n >= threshold;
+    formulaEl.innerHTML = `n = ${n}, f = ${f} &nbsp;→&nbsp; need n ≥ 3f+1 = ${threshold} &nbsp;→&nbsp; ` +
+      (satisfies ? `<span style="color:#4ade80">satisfied ✓</span>` : `<span style="color:#f87171">VIOLATED ✗ (short by ${threshold-n})</span>`);
+  }
+  function drawStatic() {
+    ctx.clearRect(0,0,W,H);
+    ctx.strokeStyle = 'rgba(58,74,107,0.25)'; ctx.lineWidth = 1;
+    for (let i=0;i<nodes.length;i++) for (let j=i+1;j<nodes.length;j++) {
+      ctx.beginPath(); ctx.moveTo(nodes[i].x,nodes[i].y); ctx.lineTo(nodes[j].x,nodes[j].y); ctx.stroke();
+    }
+    trails.forEach(m => {
+      ctx.strokeStyle = m.value ? 'rgba(96,165,250,0.5)' : 'rgba(251,146,60,0.5)'; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(nodes[m.fromIdx].x,nodes[m.fromIdx].y); ctx.lineTo(nodes[m.toIdx].x,nodes[m.toIdx].y); ctx.stroke();
+    });
+    nodes.forEach(drawNode);
+  }
+  function drawNode(n) {
+    ctx.beginPath(); ctx.arc(n.x,n.y,20,0,Math.PI*2);
+    ctx.fillStyle = n.byzantine ? '#f87171' : (n.decision === false ? '#facc15' : '#4ade80');
+    ctx.fill(); ctx.strokeStyle = '#0b0f1a'; ctx.lineWidth = 2; ctx.stroke();
+    ctx.fillStyle = '#0b0f1a'; ctx.font = 'bold 13px monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText(n.id, n.x, n.y);
+  }
+  function drawMessages(msgs) {
+    msgs.forEach(m => {
+      if (m.progress <= 0) return;
+      const from = nodes[m.fromIdx], to = nodes[m.toIdx];
+      const x = from.x+(to.x-from.x)*m.progress, y = from.y+(to.y-from.y)*m.progress;
+      ctx.beginPath(); ctx.arc(x,y,6,0,Math.PI*2);
+      ctx.fillStyle = m.value ? '#60a5fa' : '#fb923c'; ctx.fill();
+      ctx.strokeStyle = '#0b0f1a'; ctx.lineWidth = 1; ctx.stroke();
+    });
+  }
+  function byzantineVote(receiverIdx, honestReceiverOrder) {
+    const pos = honestReceiverOrder.indexOf(receiverIdx), half = Math.ceil(honestReceiverOrder.length/2);
+    return worstCaseBox.checked ? pos < half : Math.random() < 0.5;
+  }
+  function runRound() {
+    if (animating) return;
+    const n = nodes.length; messages = []; trails = [];
+    const honestReceiverOrder = nodes.filter(nd => !nd.byzantine).map(nd => nd.id);
+    for (let i=0;i<n;i++) for (let j=0;j<n;j++) {
+      if (i===j) continue;
+      const sender = nodes[i];
+      const value = sender.byzantine ? byzantineVote(j, honestReceiverOrder) : true;
+      messages.push({ fromIdx:i, toIdx:j, value, progress:0 });
+    }
+    nodes.forEach(nd => { nd.decision=null; nd.votesTrue=0; nd.votesFalse=0; });
+    tallyTable.style.display = 'none';
+    animateMessages();
+  }
+  function animateMessages() {
+    animating = true; let t = 0; const speed = 0.012;
+    function step() {
+      t += speed; messages.forEach(m => m.progress = Math.min(1,t));
+      drawStatic(); drawMessages(messages);
+      if (t < 1) animId = requestAnimationFrame(step);
+      else { trails = messages.slice(); animating = false; tallyDecisions(); }
+    }
+    step();
+  }
+  function tallyDecisions() {
+    tallyBody.innerHTML = '';
+    nodes.forEach((receiver,i) => {
+      if (receiver.byzantine) return;
+      let vt=0, vf=0;
+      messages.filter(m => m.toIdx===i).forEach(m => m.value ? vt++ : vf++);
+      receiver.votesTrue=vt; receiver.votesFalse=vf; receiver.decision = vt>vf;
+      const row = document.createElement('tr');
+      row.innerHTML = `<td>${receiver.id}</td><td class="tag-honest">honest</td><td>${vt}</td><td>${vf}</td><td>${receiver.decision?'TRUE':'FALSE'}</td>`;
+      tallyBody.appendChild(row);
+    });
+    nodes.filter(nd => nd.byzantine).forEach(nd => {
+      const row = document.createElement('tr');
+      row.innerHTML = `<td>${nd.id}</td><td class="tag-byz">Byzantine</td><td colspan="3">— sends conflicting votes —</td>`;
+      tallyBody.appendChild(row);
+    });
+    tallyTable.style.display = '';
+    drawStatic();
+    const decisions = nodes.filter(nd => !nd.byzantine).map(nd => nd.decision);
+    const allAgree = decisions.every(d => d === decisions[0]);
+    statusEl.textContent = allAgree ? `✓ Consensus reached — all ${decisions.length} honest nodes agree.` : `✗ Consensus BROKEN — honest nodes disagree.`;
+    statusEl.className = 'bft-status ' + (allAgree ? 'agree' : 'disagree');
+  }
+  function reset() {
+    if (animId) cancelAnimationFrame(animId);
+    animating = false;
+    layoutNodes(parseInt(nSelect.value));
+    trails = []; tallyTable.style.display = 'none';
+    drawStatic(); updateFormula();
+    statusEl.textContent = 'Click nodes to set f, then press "Run Round".'; statusEl.className = 'bft-status';
+  }
+  canvas.addEventListener('click', (e) => {
+    if (animating) return;
+    const rect = canvas.getBoundingClientRect();
+    const mx = (e.clientX-rect.left)*(canvas.width/rect.width), my = (e.clientY-rect.top)*(canvas.height/rect.height);
+    nodes.forEach(nd => { if (Math.hypot(mx-nd.x,my-nd.y) <= 20) nd.byzantine = !nd.byzantine; });
+    trails = []; tallyTable.style.display = 'none';
+    statusEl.textContent = 'Click nodes to set f, then press "Run Round".'; statusEl.className = 'bft-status';
+    drawStatic(); updateFormula();
+  });
+  runBtn.addEventListener('click', runRound);
+  resetBtn.addEventListener('click', reset);
+  nSelect.addEventListener('change', reset);
+  worstCaseBox.addEventListener('change', () => { trails=[]; tallyTable.style.display='none'; drawStatic(); });
+  reset();
+})();
+</script>
+</body>
+</html>
