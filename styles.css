@@ -141,23 +141,6 @@ code, pre, .mono {
 .accent {
   color: var(--accent-color);
 }
-
-/* Profile Picture */
-.profile-pic {
-  width: 140px;
-  height: 140px;
-  border-radius: 8px;
-  object-fit: cover;
-  margin-bottom: 2rem;
-  filter: grayscale(100%);
-  transition: filter 0.4s ease;
-  display: block;
-}
-
-.profile-pic:hover {
-  filter: grayscale(0%);
-}
-
 /* Definition Lists / Two Columns */
 dl {
   margin-top: 1.5rem;
