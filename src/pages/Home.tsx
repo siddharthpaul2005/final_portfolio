@@ -21,6 +21,8 @@ import Widget, { WidgetLabel } from '../components/ios/Widget';
 import AppIcon, { type IconColor } from '../components/ios/AppIcon';
 import { ListRow } from '../components/ios/InsetList';
 import ActivityHeatmap from '../components/ActivityHeatmap';
+import LogoMark from '../components/ios/LogoMark';
+import { toolGroups } from '../data/uses';
 import { GithubIcon, LinkedinIcon, XIcon } from '../components/icons/SocialIcons';
 import { profile } from '../data/profile';
 import { socials } from '../data/socials';
@@ -245,6 +247,23 @@ const Profile = () => {
         <p className="mt-3 text-[15.5px] leading-relaxed text-label-2">{profile.bio}</p>
       </div>
 
+      {/* What I'm building right now (static, replaces the old status-bar island) */}
+      {now.active[0] && (
+        <Link
+          to={now.active[0].href ?? '/now'}
+          className="lg lg-press mt-6 flex items-center gap-3 rounded-[18px] px-3.5 py-3"
+        >
+          <span className="relative z-[2] flex min-w-0 flex-1 items-center gap-3">
+            <AppIcon icon={Hammer} color="green" size={34} />
+            <span className="min-w-0">
+              <span className="block text-[11.5px] font-semibold uppercase tracking-[0.06em] text-label-2">Currently building</span>
+              <span className="block truncate text-[15px] font-semibold text-foreground">{now.active[0].title}</span>
+            </span>
+            <ArrowRight className="ml-auto h-4 w-4 shrink-0 text-label-2" />
+          </span>
+        </Link>
+      )}
+
       <div className="mt-6 flex flex-wrap gap-2.5 px-1">
         <Link
           to="/resume"
@@ -409,6 +428,41 @@ const CodingActivity = () => (
 );
 
 /* ---------- Projects ---------- */
+
+/* ---------- AI toolkit preview ---------- */
+
+const toolkitTools = toolGroups.flatMap((g) => g.tools);
+const shippedTools = toolkitTools.filter((t) => t.proof).length;
+
+const ToolkitPreview = () => (
+  <motion.section {...reveal}>
+    <SectionTitle
+      action={
+        <Link to="/uses" className="text-[13px] font-semibold text-[#0a84ff] hover:opacity-80">
+          See all
+        </Link>
+      }
+    >
+      AI Toolkit
+    </SectionTitle>
+    <Link to="/uses" className="lg lg-press block rounded-[24px] p-4 sm:p-5">
+      <div className="relative z-[2]">
+        <div className="flex flex-wrap gap-2">
+          {toolkitTools.slice(0, 12).map((t) => (
+            <span key={t.name} title={t.name}>
+              <LogoMark id={t.logo} size={36} />
+            </span>
+          ))}
+        </div>
+        <p className="mt-4 text-[14px] leading-relaxed text-label-2">
+          Model gateways, local inference, retrieval, speech and agents:{' '}
+          <span className="font-semibold text-foreground">{toolkitTools.length} tools</span>,{' '}
+          {shippedTools} of them used in shipped projects.
+        </p>
+      </div>
+    </Link>
+  </motion.section>
+);
 
 const ProjectsList = () => (
   <motion.section {...reveal}>
@@ -659,6 +713,7 @@ const Home = () => (
     <NowStack />
     <CodingActivity />
     <ProjectsList />
+    <ToolkitPreview />
     <Widgets />
     <Stack />
     <GetInTouch />

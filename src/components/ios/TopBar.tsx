@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Sun, Moon } from 'lucide-react';
-import DynamicIsland from './DynamicIsland';
 import useUIStore from '../../store/useUIStore';
 import useThemeStore from '../../store/useThemeStore';
 import { site } from '../../data/site';
@@ -47,14 +46,11 @@ const TopBar = () => {
           background: 'linear-gradient(to bottom, var(--wallpaper-base), transparent)',
         }}
       />
-      {/* items-start: when the island expands on hover, the time and search hint stay pinned to the top row */}
       <div className="relative mx-auto flex max-w-[720px] items-start gap-3 px-4 sm:px-6 pt-3">
         <Link to="/" className="pointer-events-auto flex h-9 w-16 shrink-0 items-center text-[14px] font-semibold tabular-nums text-foreground sm:flex-1">
           {time}
         </Link>
-        <div className="flex min-w-0 flex-1 justify-center pointer-events-auto">
-          <DynamicIsland />
-        </div>
+        <div className="flex-1" />
         <div className="pointer-events-auto flex h-9 w-16 shrink-0 items-center justify-end gap-1 sm:flex-1">
           <button
             type="button"
