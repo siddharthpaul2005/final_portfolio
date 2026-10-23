@@ -1,0 +1,9 @@
+A voice-first question-answering system over multilingual data. You speak a question in your own language and script (Hindi, Bengali and more), and it retrieves and extracts the answer in **under 200 ms** end to end. Built as a 3-person team, which I led.
+
+## Key Features
+
+- **End-to-end architecture:** Speech input → retrieval → answer extraction → API → web UI. I designed the system, split it into modules, assigned them across the team, and built the retrieval core myself.
+- **Hybrid retrieval:** Sparse BM25 fused with dense `multilingual-e5-small` embeddings in an HNSW vector index, combined with Reciprocal Rank Fusion, over the ai4bharat MSMARCO-XI dataset.
+- **Cross-lingual search:** Native-script queries in Hindi and Bengali find relevant passages.
+- **Extractive answers instead of LLM generation:** Answers are span-selected from the retrieved passages, which keeps latency low and answers grounded. Every stage is instrumented for latency.
+- **Deployed:** A FastAPI backend with a web front-end that takes live voice queries.

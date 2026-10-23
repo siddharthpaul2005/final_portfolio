@@ -1,0 +1,8 @@
+A retrieval-augmented generation pipeline for personalised learning assistance.
+
+## Key Features
+
+- **Ingestion:** Course documents are chunked and embedded with a text-embedding model; vectors are stored locally.
+- **Retrieval:** Relevant chunks are found by cosine similarity and injected into the LLM's context, keeping answers grounded and reducing hallucination.
+- **Source attribution:** Answers cite the course material they came from.
+- **No fine-tuning:** Draws on course-specific material dynamically, without the cost of fine-tuning a model.

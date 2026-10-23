@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" style="background-color: #09090b;">
+
+<head>
+  <meta charset="UTF-8" />
+  <script>
+    (function() {
+      try {
+        var storedTheme = localStorage.getItem('theme');
+        if (storedTheme === 'light') {
+          document.documentElement.classList.remove('dark');
+        } else {
+          document.documentElement.classList.add('dark');
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="manifest" href="/manifest.json" />
+  
+  <!-- Preload Hero Images -->
+  <link rel="preload" href="/assets/siddharth-photo.jpg" as="image" />
+
+  <!-- Primary SEO Title -->
+  <title>Siddharth Paul - Software Engineer</title>
+
+  <!-- Meta Description -->
+  <meta name="description"
+    content="Backend and AI/ML engineer: multithreaded C++ tools, Go services over gRPC, and retrieval systems that answer in milliseconds. Open to backend SWE and AI/ML roles." />
+
+  <!-- Keywords -->
+  <meta name="keywords"
+    content="Siddharth Paul, Software Engineer, Backend Engineer, AI/ML Engineer, Distributed Systems, RAG, C++, Go" />
+
+  <meta name="author" content="Siddharth Paul" />
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://siddharthdev-eta.vercel.app/" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+  <!-- Theme Color -->
+  <meta name="theme-color" content="#09090b" />
+
+  <!-- Open Graph Meta -->
+  <meta property="og:title" content="Siddharth Paul - Software Engineer">
+  <meta property="og:description"
+    content="Backend and AI/ML engineer: multithreaded C++ tools, Go services over gRPC, and retrieval systems that answer in milliseconds. Open to backend SWE and AI/ML roles.">
+  <meta property="og:url" content="https://siddharthdev-eta.vercel.app/">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://siddharthdev-eta.vercel.app/assets/siddharth-photo.jpg">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Siddharth Paul - Software Engineer">
+  <meta name="twitter:description"
+    content="Backend and AI/ML engineer: multithreaded C++ tools, Go services over gRPC, and retrieval systems that answer in milliseconds. Open to backend SWE and AI/ML roles.">
+  <meta name="twitter:image" content="https://siddharthdev-eta.vercel.app/assets/siddharth-photo.jpg">
+
+  <!-- Robots -->
+  <meta name="robots" content="index, follow">
+
+  <!-- Styles & Fonts -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <link
+    href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@800,1&f[]=general-sans@300&f[]=boska@300&f[]=switzer@300&f[]=outfit@600&f[]=poppins@400&f[]=supreme@500&f[]=rowan@400&f[]=quilon@500&f[]=satoshi@500&f[]=ranade@300&f[]=excon@500,900&f[]=synonym@200,300,400,500,600,700,1&f[]=amulya@400,700&f[]=neco@400&f[]=pally@500&f[]=hind@700&display=swap"
+    rel="stylesheet" />
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Dancing+Script:wght@400;700&family=Instrument+Serif:ital,wght@0,400;1,400&family=Hanken+Grotesk:ital,wght@0,400;0,500;1,400&family=Geist:wght@300..800&family=Geist+Mono:wght@100..900&display=swap"
+    rel="stylesheet">
+</head>
+
+<body>
+
+  <div id="root"></div>
+
+  <!-- Scripts -->
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
+</html>

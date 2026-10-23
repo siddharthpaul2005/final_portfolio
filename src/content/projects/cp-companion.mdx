@@ -1,0 +1,9 @@
+A cross-platform desktop app, built in Rust with Tauri v2, that keeps every upcoming competitive-programming contest in one place.
+
+## Key Features
+
+- **All the platforms:** Aggregates upcoming contests from Codeforces, LeetCode, CodeChef and AtCoder through the Clist API.
+- **Calendar and list views:** See the week at a glance or scan what's next.
+- **Countdown widget:** A second, always-on-top window shows a live countdown to your next contest.
+- **Local cache over IPC:** API results are cached in SQLite behind the Rust backend and served over Tauri IPC, so the widget window syncs from the local cache instead of re-hitting the rate-limited API.
+- **Stack:** Rust, Tauri v2, React, TypeScript, SQLite.

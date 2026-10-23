@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Equivocation Fork Visualizer</title>
+<style>
+  body { background:#0b0f1a; margin:0; padding:24px; }
+  .bft-wrap { background:#0b0f1a; border:1px solid #1f2a44; border-radius:12px; padding:24px; font-family:'Courier New',monospace; color:#e6e6e6; max-width:760px; margin:0 auto; }
+  .bft-controls { display:flex; gap:14px; align-items:center; margin-bottom:14px; flex-wrap:wrap; font-size:13px; }
+  .bft-controls button, .bft-controls select { background:#1a2236; color:#e6e6e6; border:1px solid #3a4a6b; border-radius:6px; padding:8px 14px; cursor:pointer; font-family:inherit; }
+  #eqCanvas { display:block; background:#0b0f1a; border-radius:8px; margin:0 auto; }
+  .bft-status { margin-top:12px; font-size:14px; min-height:24px; font-weight:bold; }
+  .bft-status.agree { color:#4ade80; }
+  .bft-status.disagree { color:#f87171; }
+</style>
+</head>
+<body>
+<div class="bft-wrap">
+  <div class="bft-controls">
+    <label>Validators (n): <select id="eqN">
+      <option value="30">30</option><option value="60">60</option><option value="100" selected>100</option>
+    </select></label>
+    <label>Byzantine (f): <input type="range" id="eqF" min="0" max="49" value="33"> <span id="eqFLabel">33</span></label>
+    <button id="eqRunBtn">▶ Attempt Fork (animated)</button>
+  </div>
+  <canvas id="eqCanvas" width="700" height="380"></canvas>
+  <div class="bft-status" id="eqStatus">Drag f, then press "Attempt Fork".</div>
+</div>
+<script>
+(function() {
+  const canvas = document.getElementById('eqCanvas'), ctx = canvas.getContext('2d');
+  const nSelect = document.getElementById('eqN'), fSlider = document.getElementById('eqF'), fLabel = document.getElementById('eqFLabel');
+  const runBtn = document.getElementById('eqRunBtn'), statusEl = document.getElementById('eqStatus');
+  const W = canvas.width, H = canvas.height, QUORUM = 2/3;
+  let animating = false;
+
+  function layout(n, f, revealFrac) {
+    ctx.clearRect(0,0,W,H);
+    const honest = n - f, g0h = Math.floor(honest/2), g1h = honest - g0h;
+    drawCamp(60, "Camp 0 → sees BLOCK_A", g0h, f, revealFrac);
+    drawCamp(W/2+20, "Camp 1 → sees BLOCK_B", g1h, f, revealFrac);
+    ctx.strokeStyle = 'rgba(248,113,113,0.4)'; ctx.setLineDash([6,4]);
+    ctx.beginPath(); ctx.moveTo(W/2,40); ctx.lineTo(W/2,H-20); ctx.stroke(); ctx.setLineDash([]);
+  }
+  function drawCamp(originX, label, honestCount, byzCount, revealFrac) {
+    ctx.fillStyle = '#e6e6e6'; ctx.font = 'bold 13px monospace'; ctx.textAlign = 'left';
+    ctx.fillText(label, originX, 24);
+    const total = honestCount + byzCount, cols = 10, spacing = 16;
+    const revealCount = Math.floor(total * revealFrac);
+    for (let i = 0; i < revealCount; i++) {
+      const col = i % cols, row = Math.floor(i / cols);
+      const x = originX + col*spacing, y = 50 + row*spacing;
+      ctx.beginPath(); ctx.arc(x,y,5,0,Math.PI*2);
+      ctx.fillStyle = i >= honestCount ? '#f87171' : '#4ade80';
+      ctx.fill();
+    }
+  }
+  function finalize(n, f, camp0VotesForA, camp1VotesForB) {
+    const campAFinalized = (camp0VotesForA/n) >= QUORUM;
+    const campBFinalized = (camp1VotesForB/n) >= QUORUM;
+    ctx.fillStyle = campAFinalized ? '#4ade80' : '#facc15';
+    ctx.font = 'bold 13px monospace';
+    ctx.fillText(campAFinalized ? '✓ FINALIZED' : '✗ no quorum', 60, H-8);
+    ctx.fillStyle = campBFinalized ? '#4ade80' : '#facc15';
+    ctx.fillText(campBFinalized ? '✓ FINALIZED' : '✗ no quorum', W/2+20, H-8);
+    if (!campAFinalized && !campBFinalized) {
+      statusEl.textContent = `Safe: neither block reaches 67% quorum. f=${f} of n=${n} (${(f/n*100).toFixed(1)}%) — attack fails.`;
+      statusEl.className = 'bft-status agree';
+    } else if (campAFinalized && campBFinalized) {
+      statusEl.textContent = `⚠ SAFETY VIOLATION: both camps finalized DIFFERENT blocks. f=${f} exceeds n/3 — chain forked.`;
+      statusEl.className = 'bft-status disagree';
+    } else {
+      statusEl.textContent = `Block A finalized normally. f=${f} of n=${n} — no fork.`;
+      statusEl.className = 'bft-status agree';
+    }
+  }
+  function attemptFork() {
+    if (animating) return;
+    animating = true;
+    const n = parseInt(nSelect.value), f = parseInt(fSlider.value);
+    const honest = n - f, g0h = Math.floor(honest/2), g1h = honest - g0h;
+    const camp0VotesForA = g0h + f; // liars vote A here
+    const camp1VotesForB = f;       // liars vote B here, honest nodes never vote B
+
+    let t = 0;
+    function step() {
+      t += 0.02;
+      layout(n, f, Math.min(1,t));
+      if (t < 1) requestAnimationFrame(step);
+      else { finalize(n, f, camp0VotesForA, camp1VotesForB); animating = false; }
+    }
+    step();
+  }
+  fSlider.addEventListener('input', () => fLabel.textContent = fSlider.value);
+  runBtn.addEventListener('click', attemptFork);
+  nSelect.addEventListener('change', () => {
+    const maxF = Math.floor(parseInt(nSelect.value)/2) - 1;
+    fSlider.max = maxF; if (parseInt(fSlider.value) > maxF) fSlider.value = maxF;
+    fLabel.textContent = fSlider.value;
+  });
+  layout(parseInt(nSelect.value), parseInt(fSlider.value), 1);
+})();
+</script>
+</body>
+</html>

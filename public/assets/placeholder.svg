@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <rect width="1200" height="800" fill="#1a1a1a"/>
+  <rect x="24" y="24" width="1152" height="752" rx="24" fill="none" stroke="#3a3a3a" stroke-width="4" stroke-dasharray="20 14"/>
+  <g fill="none" stroke="#5a5a5a" stroke-width="10" stroke-linejoin="round" transform="translate(500 300)">
+    <rect x="0" y="0" width="200" height="150" rx="14"/>
+    <circle cx="60" cy="50" r="18"/>
+    <path d="M0 125 70 70l50 40 30-25 50 40"/>
+  </g>
+  <text x="600" y="530" text-anchor="middle" font-family="system-ui, sans-serif" font-size="36" fill="#7a7a7a">Placeholder image</text>
+</svg>

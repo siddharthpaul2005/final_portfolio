@@ -1,0 +1,4 @@
+User-agent: *
+Disallow:
+
+Sitemap: https://siddharthdev-eta.vercel.app/sitemap.xml

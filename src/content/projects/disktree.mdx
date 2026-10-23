@@ -1,0 +1,11 @@
+A multithreaded disk-usage analyzer written in C++20. It indexes **230K files across 210 GB in about 10 seconds**, and ships as a zero-dependency single binary with three front-ends: a CLI, an interactive terminal UI, and a local web UI.
+
+## Key Features
+
+- **Iterative scanner:** A stack-based DFS walks the file system, so very deep directory trees never hit recursion-depth limits.
+- **Thread-pool traversal:** A fixed-size thread pool takes directory subtrees as tasks, instead of spawning a thread per directory.
+- **Arena allocator:** A bump-pointer arena for tree nodes replaces hundreds of thousands of per-node heap allocations with pointer bumps, and frees the whole tree by releasing a few large blocks.
+- **Scan → build → index pipeline:** Sizes roll up bottom-up, and a pre-sorted flat index answers top-N queries without re-scanning.
+- **Three front-ends, one core:** A CLI, an interactive FTXUI terminal UI, and a local web UI (embedded HTTP server with a D3 treemap).
+- **Tracking growth over time:** JSON/CSV export, plus zstd-compressed snapshots with scan-to-scan diffing.
+- **Engineering hygiene:** Catch2 unit tests and GitHub Actions CI.

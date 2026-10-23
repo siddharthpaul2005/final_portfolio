@@ -1,0 +1,8 @@
+A local-first, always-on daemon written in Go that supervises polyglot AI agents (Python and Go) running as independent OS processes. Actively in development.
+
+## Key Features
+
+- **Process isolation:** Each agent runs as its own OS process, so an agent crash never takes down the control plane.
+- **Typed contracts:** gRPC/Protobuf definitions cover agent registration, task dispatch and server-streamed logs. Generated Go and Python stubs let agents in either language share one interface.
+- **Agent registry:** The daemon tracks every agent it supervises.
+- **In progress:** Heartbeat-based failure detection and a task dispatcher built on top of the registry.

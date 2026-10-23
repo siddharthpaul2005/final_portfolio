@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel>
+    <title>Siddharth Paul - Blog</title>
+    <link>https://siddharthdev-eta.vercel.app/blog</link>
+    <description>Notes on systems, backend engineering and things I am learning.</description>
+    <language>en</language>
+    <lastBuildDate>Fri, 23 Oct 2026 22:04:02 GMT</lastBuildDate>
+    <atom:link href="https://siddharthdev-eta.vercel.app/feed.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>India 2047: From Potential to Capability</title>
+      <link>https://paulsiddharth.medium.com/india-2047-from-potential-to-capability-d8cd93d5addc</link>
+      <guid isPermaLink="true">https://paulsiddharth.medium.com/india-2047-from-potential-to-capability-d8cd93d5addc</guid>
+      <pubDate>Wed, 23 Sep 2026 18:30:00 GMT</pubDate>
+      <description><![CDATA[India 2047: From Potential to Capability]]></description>
+      <category>Opinion</category>
+      <dc:creator>Siddharth Paul</dc:creator>
+    </item>
+    <item>
+      <title>Byzantine Generals&apos; Problem</title>
+      <link>https://siddharthdev-eta.vercel.app/blog/byzantine-generals-problem</link>
+      <guid isPermaLink="true">https://siddharthdev-eta.vercel.app/blog/byzantine-generals-problem</guid>
+      <pubDate>Thu, 27 Aug 2026 18:30:00 GMT</pubDate>
+      <description><![CDATA[Two generals sit on opposite hills, staring down at a walled city between them. Their combined armies can take it. Either army alone will be slaughtered. They need to attack at the exact same moment,...]]></description>
+      <category>Distributed Systems</category>
+      <dc:creator>Siddharth Paul</dc:creator>
+    </item>
+    <item>
+      <title>Anthropic vs Pentagon: The AI Ethics Battle Explained</title>
+      <link>https://paulsiddharth.medium.com/anthropic-vs-pentagon-the-ai-ethics-battle-explained-406c2c12472e</link>
+      <guid isPermaLink="true">https://paulsiddharth.medium.com/anthropic-vs-pentagon-the-ai-ethics-battle-explained-406c2c12472e</guid>
+      <pubDate>Tue, 10 Mar 2026 18:30:00 GMT</pubDate>
+      <description><![CDATA[The conflict between Anthropic and the U.S. Department of War over AI guardrails, explained in depth.]]></description>
+      <category>AI</category>
+      <dc:creator>Siddharth Paul</dc:creator>
+    </item>
+    <item>
+      <title>You&apos;re Not Overthinking. You&apos;re Under-Deciding.</title>
+      <link>https://paulsiddharth.medium.com/youre-not-overthinking-you-re-under-deciding-94f75130c199</link>
+      <guid isPermaLink="true">https://paulsiddharth.medium.com/youre-not-overthinking-you-re-under-deciding-94f75130c199</guid>
+      <pubDate>Thu, 29 Jan 2026 18:30:00 GMT</pubDate>
+      <description><![CDATA[You're Not Overthinking. You're Under-Deciding.]]></description>
+      <category>Mindset</category>
+      <dc:creator>Siddharth Paul</dc:creator>
+    </item>
+    <item>
+      <title>How Google Maps Actually Works: The Simple Explanation Behind Routing Algorithms</title>
+      <link>https://paulsiddharth.medium.com/how-google-maps-actually-works-the-simple-explanation-behind-routing-algorithms-6f099591295c</link>
+      <guid isPermaLink="true">https://paulsiddharth.medium.com/how-google-maps-actually-works-the-simple-explanation-behind-routing-algorithms-6f099591295c</guid>
+      <pubDate>Tue, 25 Nov 2025 18:30:00 GMT</pubDate>
+      <description><![CDATA[How Google Maps Actually Works: The Simple Explanation Behind Routing Algorithms]]></description>
+      <category>Algorithms</category>
+      <dc:creator>Siddharth Paul</dc:creator>
+    </item>
+    <item>
+      <title>From New Atheism to Wokism: The Ideological Shift No One Saw Coming</title>
+      <link>https://paulsiddharth.medium.com/philosophy-of-failure-e508f205fb4c</link>
+      <guid isPermaLink="true">https://paulsiddharth.medium.com/philosophy-of-failure-e508f205fb4c</guid>
+      <pubDate>Sun, 19 Oct 2025 18:30:00 GMT</pubDate>
+      <description><![CDATA[From New Atheism to Wokism: The Ideological Shift No One Saw Coming]]></description>
+      <category>Opinion</category>
+      <dc:creator>Siddharth Paul</dc:creator>
+    </item>
+    <item>
+      <title>Question 234, LeetCode</title>
+      <link>https://paulsiddharth.medium.com/question-234-leetcode-b18637f7c3f6</link>
+      <guid isPermaLink="true">https://paulsiddharth.medium.com/question-234-leetcode-b18637f7c3f6</guid>
+      <pubDate>Mon, 06 Oct 2025 18:30:00 GMT</pubDate>
+      <description><![CDATA[Question 234, LeetCode]]></description>
+      <category>DSA</category>
+      <dc:creator>Siddharth Paul</dc:creator>
+    </item>
+    <item>
+      <title>How Eigenfaces Got Me Hooked on Machine Learning</title>
+      <link>https://paulsiddharth.medium.com/how-eigenfaces-got-me-hooked-on-machine-learning-8283864324f1</link>
+      <guid isPermaLink="true">https://paulsiddharth.medium.com/how-eigenfaces-got-me-hooked-on-machine-learning-8283864324f1</guid>
+      <pubDate>Tue, 08 Apr 2025 18:30:00 GMT</pubDate>
+      <description><![CDATA[How Eigenfaces Got Me Hooked on Machine Learning]]></description>
+      <category>Machine Learning</category>
+      <dc:creator>Siddharth Paul</dc:creator>
+    </item>
+  </channel>
+</rss>
