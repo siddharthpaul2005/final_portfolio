@@ -1,0 +1,19 @@
+import AlfredArchitecture from '../../components/AlfredArchitecture';
+
+**ALFRED** is the personal, Jarvis-style assistant I'm building. My Windows PC is the always-on hub. Later, my laptops, my Android phone, Telegram and a web app will connect to it, so ALFRED is reachable from anywhere.
+
+<AlfredArchitecture />
+
+## Key Features
+
+- **Go orchestrator:** Runs the show. It supervises every agent, dispatches work and enforces the safety rules. This is my [Multi-Agent Orchestration Daemon](/projects/multi-agent-orchestrator).
+- **Ten Python agents over gRPC:** Email, calendar, files, research, dev, system, messaging, media, phone, and Hands. Each agent has real capabilities, not stubs.
+- **LLM planner, the brain:** Turns a natural-language request into concrete steps for the agents to carry out.
+- **Safety gate on every action:** Actions are tiered by risk. Tier 0 actions run on their own. Tier 2 actions (send, pay, delete, install) always wait for my explicit OK.
+- **Kill switch:** Stops everything immediately.
+- **Hash-chained audit log:** Every action is recorded in an append-only log where each entry is chained to the previous one by its hash, so the history can't be quietly altered.
+
+## Roadmap
+
+- **More devices:** Connect laptops, the Android phone, Telegram and a web app to the PC hub.
+- **Orchestrator reliability:** Heartbeat-based failure detection and a task dispatcher on top of the agent registry (in progress).

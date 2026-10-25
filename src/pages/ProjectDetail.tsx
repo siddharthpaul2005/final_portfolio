@@ -2,9 +2,10 @@ import { useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { GithubIcon } from '../components/icons/SocialIcons';
 import PageShell from '../components/ios/PageShell';
-import AppIcon from '../components/ios/AppIcon';
+import TechLogo from '../components/ios/TechLogo';
 import { projects } from '../data/projects';
-import { projectIcons, fallbackIcon, areaLabels, statusLabel } from '../data/projectMeta';
+import { projectImages, projectLogos, areaLabels, statusLabel } from '../data/projectMeta';
+import Tile from '../components/ios/Tile';
 
 const mdxModules = import.meta.glob('../content/projects/*.mdx', { eager: true });
 
@@ -40,7 +41,6 @@ const ProjectDetail = () => {
     );
   }
 
-  const meta = projectIcons[project.slug] ?? fallbackIcon;
   const info = [
     { label: 'Status', value: statusLabel[project.status] },
     { label: 'Area', value: areaLabels[project.tags[0]] ?? 'Project' },
@@ -51,8 +51,8 @@ const ProjectDetail = () => {
     <PageShell title={null} crumb={project.title} back={{ to: '/projects', label: 'Projects' }}>
       {/* App Store-style header */}
       <div className="flex items-start gap-5">
-        <AppIcon icon={meta.icon} color={meta.color} size={112} className="hidden sm:inline-flex" />
-        <AppIcon icon={meta.icon} color={meta.color} size={88} className="sm:hidden" />
+        <Tile img={projectImages[project.slug]} logo={projectLogos[project.slug]} size={112} className="hidden sm:inline-flex" />
+        <Tile img={projectImages[project.slug]} logo={projectLogos[project.slug]} size={88} className="sm:hidden" />
         <div className="min-w-0 flex-1 pt-1">
           <h1 className="font-display text-[26px] sm:text-[34px] font-bold leading-tight text-foreground">{project.title}</h1>
           <p className="mt-1 text-[15px] text-label-2 line-clamp-2">{project.description}</p>
@@ -63,9 +63,10 @@ const ProjectDetail = () => {
                 href={project.demo}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-full bg-[#0a84ff] px-5 py-1.5 text-[14px] font-bold text-white hover:opacity-90"
+                className="inline-flex items-center gap-1.5 rounded-full bg-[#0a84ff] px-5 py-1.5 text-[14px] font-bold text-white hover:opacity-90"
               >
-                OPEN
+                {project.demoLabel === 'Colab' && <TechLogo name="colab" size={15} />}
+                {project.demoLabel ? `Open in ${project.demoLabel}` : 'OPEN'}
               </a>
             )}
             {project.github && (
@@ -108,7 +109,8 @@ const ProjectDetail = () => {
 
       <div className="mt-6 flex flex-wrap gap-1.5">
         {project.tags.slice(1).map((tag) => (
-          <span key={tag} className="lg-fill rounded-full px-3 py-1 text-[12.5px] font-medium text-foreground">
+          <span key={tag} className="lg-fill inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[12.5px] font-medium text-foreground">
+            <TechLogo name={tag} size={13} />
             {tag}
           </span>
         ))}

@@ -1,19 +1,6 @@
 import type { ReactNode } from 'react';
-import {
-  Mail,
-  Images,
-  Trophy,
-  Sparkles,
-  Target,
-  Coffee,
-  FileText,
-  GraduationCap,
-  Radio,
-  BookOpen,
-  FileCode2,
-} from 'lucide-react';
+import { Mail, GraduationCap, LineChart, Sigma, Zap, BookOpen, Radio, FileText, Trophy, Images } from 'lucide-react';
 import PageShell from '../components/ios/PageShell';
-import AppIcon from '../components/ios/AppIcon';
 import { InsetGroup, ListRow } from '../components/ios/InsetList';
 import { GithubIcon, LinkedinIcon, XIcon } from '../components/icons/SocialIcons';
 import { profile } from '../data/profile';
@@ -21,6 +8,17 @@ import { socials } from '../data/socials';
 import { skills } from '../data/skills';
 import { education } from '../data/site';
 import { sources } from '../data/personal';
+import TechLogo from '../components/ios/TechLogo';
+import Tile from '../components/ios/Tile';
+
+// Tiles for the focus / side lists: a real logo where one fits, otherwise an app icon.
+const focusTile = (f: string) =>
+  f.startsWith('Backend') ? { logo: 'go' }
+  : f.startsWith('Systems') ? { logo: 'c++' }
+  : f.startsWith('Applied') ? { logo: 'pytorch' }
+  : f.startsWith('DSA') ? { logo: 'codeforces' }
+  : { icon: GraduationCap, color: 'orange' as const };
+const sideIcon = (s: string) => (s.startsWith('Quant') ? LineChart : s.startsWith('Stochastic') ? Sigma : Zap);
 
 // Round action buttons under the name, like the iOS Contacts card.
 const Action = ({ href, label, children }: { href: string; label: string; children: ReactNode }) => (
@@ -90,7 +88,7 @@ const About = () => (
 
     <InsetGroup title="Education">
       <ListRow
-        icon={<AppIcon icon={GraduationCap} color="blue" size={32} />}
+        icon={<Tile icon={GraduationCap} color="blue" size={34} />}
         title={education.degree}
         subtitle={`${education.institution} · ${education.years} · CGPA ${education.cgpa}`}
         href={education.institutionUrl || undefined}
@@ -113,7 +111,8 @@ const About = () => (
           <span className="w-28 shrink-0 pt-1 text-[13px] font-medium text-label-2">{group.category}</span>
           <div className="flex flex-wrap gap-1.5">
             {group.items.map((item) => (
-              <span key={item} className="lg-fill rounded-full px-2.5 py-1 text-[12.5px] font-medium text-foreground">
+              <span key={item} className="lg-fill inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[12.5px] font-medium text-foreground">
+                <TechLogo name={item} size={13} />
                 {item}
               </span>
             ))}
@@ -124,7 +123,7 @@ const About = () => (
 
     <InsetGroup title="Focus" footer="What I actively work on.">
       {profile.focus.map((f) => (
-        <ListRow key={f} icon={<AppIcon icon={Target} color="blue" size={32} />} title={f} />
+        <ListRow key={f} icon={<Tile {...focusTile(f)} size={34} />} title={f} />
       ))}
     </InsetGroup>
 
@@ -132,11 +131,7 @@ const About = () => (
       {profile.side.map((s) => (
         <ListRow
           key={s}
-          icon={
-            <span className="flex h-8 w-8 items-center justify-center rounded-[9px] border border-dashed border-[var(--label-2)] text-label-2">
-              <Coffee className="h-4 w-4" />
-            </span>
-          }
+          icon={<Tile icon={sideIcon(s)} size={34} dashed />}
           title={<span className="text-foreground/80">{s}</span>}
         />
       ))}
@@ -148,7 +143,7 @@ const About = () => (
         {s.items.map((item) => (
           <ListRow
             key={item.title}
-            icon={<AppIcon icon={s.group.startsWith('Books') ? BookOpen : s.group === 'Courses' ? GraduationCap : FileCode2} color={s.group.startsWith('Books') ? 'orange' : s.group === 'Courses' ? 'blue' : 'gray'} size={32} />}
+            icon={<Tile logo={item.logo} icon={s.group === 'Courses' ? GraduationCap : BookOpen} color={s.group === 'Courses' ? 'blue' : 'orange'} size={34} />}
             title={item.title}
             subtitle={item.by}
           />
@@ -157,11 +152,11 @@ const About = () => (
     ))}
 
     <InsetGroup title="More">
-      <ListRow icon={<AppIcon icon={Radio} color="green" size={32} />} title="Now" subtitle="What I'm working on" to="/now" />
-      <ListRow icon={<AppIcon icon={FileText} color="red" size={32} />} title="Resume" to="/resume" />
-      <ListRow icon={<AppIcon icon={Trophy} color="orange" size={32} />} title="Achievements" to="/certificates" />
-      <ListRow icon={<AppIcon icon={Images} color="pink" size={32} />} title="Gallery" to="/photos" />
-      <ListRow icon={<AppIcon icon={Sparkles} color="indigo" size={32} />} title="AI Toolkit" subtitle="Models, retrieval, inference and agents" to="/uses" />
+      <ListRow icon={<Tile icon={Radio} color="green" size={34} />} title="Now" subtitle="What I'm working on" to="/now" />
+      <ListRow icon={<Tile icon={FileText} color="red" size={34} />} title="Resume" to="/resume" />
+      <ListRow icon={<Tile icon={Trophy} color="orange" size={34} />} title="Achievements" to="/certificates" />
+      <ListRow icon={<Tile icon={Images} color="pink" size={34} />} title="Gallery" to="/photos" />
+      <ListRow icon={<Tile logo="openai" size={34} />} title="AI Toolkit" subtitle="Models, retrieval, inference and agents" to="/uses" />
     </InsetGroup>
 
   </PageShell>

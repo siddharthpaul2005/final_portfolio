@@ -1,12 +1,14 @@
-A stock price and market-movement predictor that supports analysing multiple stocks side by side.
+A notebook that predicts next-day stock moves for any set of tickers from historical price data, framed both as classification and as regression.
 
 ## Key Features
 
-- **Multi-stock:** Select several stocks dynamically and view their movements and predictions together.
-- **Models:** Linear Regression, Random Forest, and a basic LSTM prototype for sequence modelling.
-- **Feature engineering:** Lag features, rolling statistics and volume-weighted price deltas.
-- **Data:** Historical prices pulled with yFinance and processed with Pandas.
+- **Any tickers, any range:** Pick the stocks and the date range, and the data is pulled with yFinance.
+- **Technical indicators:** 20/50-day SMAs and EMAs, RSI and Bollinger Bands as features.
+- **Classification:** Will tomorrow close higher or lower? Logistic Regression and Random Forest, compared on accuracy, precision, recall and F1 in a per-ticker performance table.
+- **Regression:** Predicts tomorrow's closing price with Linear Regression and a Random Forest Regressor, scored with R², MAE and RMSE, plus actual-vs-predicted plots.
+- **Feature importance:** Which indicators actually drove the models' decisions.
 
 ## Reflections & Learnings
 
-- Building intuition for the signal-to-noise ratio in financial time series, and why price prediction is so hard.
+- Direction (classification) is easier to interpret, while price level (regression) carries more information, but a small error can flip the trading decision.
+- Building intuition for how noisy daily financial time series are, which later shaped the far more rigorous pairs trading study at Echelon.

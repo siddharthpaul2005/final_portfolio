@@ -1,0 +1,22 @@
+The first research study from **Echelon Strategies**, a research group I'm part of with two friends (authors: Siddharth Paul, Souradeep Bhattacharya, Ankur Saha). It tests a market-neutral pairs trading strategy on NIFTY 200 stocks, with both legs traded as single-stock futures, the practical way to hold a short overnight in India.
+
+## Key Features
+
+- **Walk-forward design:** Every 63 trading days, pairs are formed on the previous 252 days and traded on the next 63. 2018–2023 is the development period; 2024–2025 is a holdout that stays locked until the final cell.
+- **Pipeline:** Point-in-time, liquid, same-industry universe → Engle-Granger cointegration screen → Benjamini-Hochberg false-discovery control → pair selection on formation data only → walk-forward HMM market regimes → event-driven backtest.
+- **C++ engines:** The cointegration screener, the HMM and the backtester are written in C++ and called from the notebook.
+- **Realistic costs:** The full Indian F&O cost stack (brokerage, exchange, SEBI, stamp duty, GST, dated STT schedule), plus spread and square-root market impact with a 2% participation cap.
+- **Honest statistics:** Bootstrap confidence intervals, Probabilistic and Deflated Sharpe ratios, a look-ahead test and a sensitivity grid. A locked config fingerprint stops anyone re-running the holdout after tuning.
+
+## Results
+
+- About **+130 bps net per trade**, consistent across development (129.2) and the untouched holdout (133.2), so the edge per trade holds out of sample.
+- Only **30 trades in eight years**: fewer than one pair per quarter passes the false-discovery filter.
+- Neither period is statistically significant (Deflated Sharpe 0.82, PSR 0.93, and the holdout's confidence interval includes zero).
+
+**Conclusion:** a promising but unproven signal. The next step is pre-registered, economically linked pairs to raise the number of trades.
+
+## Reflections & Learnings
+
+- Version 1 showed a Sharpe ratio of about 6, and it came from look-ahead bias and arbitrary leverage. Fixing the statistics (frozen formation-window hedge ratios, correct MacKinnon p-values, multiple-testing control, no hindsight selection) is what turned it into an honest result.
+- Known limitations, documented in the notebook: a survivorship-biased universe without point-in-time membership data, today's lot sizes applied to the past, an approximated futures roll, and an uncalibrated impact model.

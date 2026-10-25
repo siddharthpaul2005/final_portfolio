@@ -2,13 +2,12 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import PageShell from '../components/ios/PageShell';
-import AppIcon from '../components/ios/AppIcon';
 import Segmented from '../components/ios/Segmented';
 import { projects } from '../data/projects';
 import { ideas } from '../data/ideas';
 import { InsetGroup } from '../components/ios/InsetList';
-import { Lightbulb } from 'lucide-react';
-import { projectIcons, fallbackIcon, areaLabels, statusLabel } from '../data/projectMeta';
+import { projectImages, projectLogos, areaLabels, statusLabel } from '../data/projectMeta';
+import Tile from '../components/ios/Tile';
 
 type Filter = 'all' | 'featured' | keyof typeof areaLabels;
 
@@ -46,7 +45,6 @@ const AllProjects = () => {
       <motion.div layout className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
         <AnimatePresence mode="popLayout">
           {visible.map((project, i) => {
-            const meta = projectIcons[project.slug] ?? fallbackIcon;
             return (
               <motion.div
                 key={project.slug}
@@ -59,7 +57,7 @@ const AllProjects = () => {
                 <Link to={`/projects/${project.slug}`} className="block h-full">
                   <div className="lg lg-press h-full rounded-[24px] p-4 sm:p-5">
                     <div className="relative z-[2] flex gap-4">
-                      <AppIcon icon={meta.icon} color={meta.color} size={60} />
+                      <Tile img={projectImages[project.slug]} logo={projectLogos[project.slug]} size={60} />
                       <div className="min-w-0 flex-1">
                         <div className="flex items-start justify-between gap-3">
                           <div className="min-w-0">
@@ -101,9 +99,7 @@ const AllProjects = () => {
           >
             {ideas.map((idea) => (
               <div key={idea.title} className="ios-row relative flex items-start gap-3.5 px-4 py-3.5">
-                <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-[9px] border border-dashed border-[var(--label-2)] text-label-2">
-                  <Lightbulb className="h-4 w-4" />
-                </span>
+                <Tile logo={idea.stack[0].toLowerCase()} size={32} dashed className="mt-0.5" />
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
                     <p className="text-[15px] font-semibold text-foreground">{idea.title}</p>

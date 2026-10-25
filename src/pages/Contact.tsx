@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { ArrowUp, Check, Loader2, Mail, PenLine, Code2 } from 'lucide-react';
+import { ArrowUp, Check, Loader2 } from 'lucide-react';
+import { site } from '../data/site';
 import PageShell from '../components/ios/PageShell';
-import AppIcon from '../components/ios/AppIcon';
+import Tile from '../components/ios/Tile';
 import { InsetGroup, ListRow } from '../components/ios/InsetList';
 import { LinkedinIcon, XIcon } from '../components/icons/SocialIcons';
 import { socials } from '../data/socials';
@@ -38,7 +39,7 @@ const Contact = () => {
     setStatus(null);
 
     try {
-      const response = await fetch(`https://formspree.io/f/${import.meta.env.VITE_FORMSPREE_FORM_ID}`, {
+      const response = await fetch(`https://formspree.io/f/${site.formspreeId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
@@ -115,7 +116,7 @@ const Contact = () => {
 
       <InsetGroup title="Or reach me directly">
         <ListRow
-          icon={<AppIcon icon={Mail} color="blue" size={32} />}
+          icon={<Tile logo="gmail" size={34} />}
           title="Email"
           subtitle={socials.email}
           href={`mailto:${socials.email}`}
@@ -139,18 +140,18 @@ const Contact = () => {
           href={socials.twitter}
         />
         <ListRow
-          icon={<AppIcon icon={PenLine} color="black" size={32} />}
+          icon={<Tile logo="medium" size={34} />}
           title="Medium"
           subtitle="Long-form writing"
           href={socials.medium}
         />
         <ListRow
-          icon={<AppIcon icon={Code2} color="orange" size={32} />}
+          icon={<Tile logo="leetcode" size={34} />}
           title="LeetCode"
           href={socials.leetcode}
         />
         <ListRow
-          icon={<AppIcon icon={Code2} color="blue" size={32} />}
+          icon={<Tile logo="codeforces" size={34} />}
           title="Codeforces"
           href={socials.codeforces}
         />

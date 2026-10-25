@@ -3,7 +3,7 @@
  */
 
 // Books, courses and docs I learned from (shown on /about).
-export const sources: { group: string; items: { title: string; by?: string }[] }[] = [
+export const sources: { group: string; items: { title: string; by?: string; logo?: string }[] }[] = [
   {
     group: 'Books & Papers',
     items: [
@@ -24,6 +24,6 @@ export const sources: { group: string; items: { title: string; by?: string }[] }
   },
   {
     group: 'Docs & References',
-    items: [{ title: 'cppreference.com' }, { title: 'Elixir School & HexDocs' }, { title: 'The Rust Programming Language' }],
+    items: [{ title: 'cppreference.com', logo: 'c++' }, { title: 'Elixir School & HexDocs', logo: 'elixir' }, { title: 'The Rust Programming Language', logo: 'rust' }],
   },
 ];

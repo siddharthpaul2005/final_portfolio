@@ -1,16 +1,9 @@
-import { Hammer, PencilRuler, BookOpen, Search, GitPullRequest, Coffee, type LucideIcon } from 'lucide-react';
 import PageShell from '../components/ios/PageShell';
-import AppIcon, { type IconColor } from '../components/ios/AppIcon';
+import Tile from '../components/ios/Tile';
 import { InsetGroup, ListRow } from '../components/ios/InsetList';
 import { now, type NowItem, type NowKind } from '../data/now';
 
-const kinds: { kind: NowKind; icon: LucideIcon; color: IconColor }[] = [
-  { kind: 'Building', icon: Hammer, color: 'green' },
-  { kind: 'Designing', icon: PencilRuler, color: 'purple' },
-  { kind: 'Learning', icon: BookOpen, color: 'blue' },
-  { kind: 'Contributing', icon: GitPullRequest, color: 'pink' },
-  { kind: 'Looking for', icon: Search, color: 'orange' },
-];
+const kinds: NowKind[] = ['Building', 'Researching', 'Designing', 'Learning', 'Contributing', 'Looking for'];
 
 const linkProps = (item: NowItem) => ({
   to: item.href?.startsWith('/') ? item.href : undefined,
@@ -27,7 +20,7 @@ const SectionHeading = ({ title, subtitle }: { title: string; subtitle: string }
 const Now = () => (
   <PageShell eyebrow={`Updated ${now.updated}`} title="Now" subtitle={now.description}>
     <SectionHeading title="Focus" subtitle="What I'm actively working on." />
-    {kinds.map(({ kind, icon, color }) => {
+    {kinds.map((kind) => {
       const items = now.active.filter((item) => item.kind === kind);
       if (items.length === 0) return null;
       return (
@@ -35,7 +28,7 @@ const Now = () => (
           {items.map((item) => (
             <ListRow
               key={item.title}
-              icon={<AppIcon icon={icon} color={color} size={32} />}
+              icon={<Tile img={item.img} logo={item.logo} icon={item.icon} color={item.color} size={34} />}
               title={item.title}
               subtitle={
                 <>
@@ -60,11 +53,7 @@ const Now = () => (
           {now.side.map((item) => (
             <ListRow
               key={item.title}
-              icon={
-                <span className="flex h-8 w-8 items-center justify-center rounded-[9px] border border-dashed border-[var(--label-2)] text-label-2">
-                  <Coffee className="h-4 w-4" />
-                </span>
-              }
+              icon={<Tile img={item.img} logo={item.logo} icon={item.icon} color={item.color} size={34} dashed />}
               title={<span className="text-foreground/85">{item.title}</span>}
               subtitle={
                 <>

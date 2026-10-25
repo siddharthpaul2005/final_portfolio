@@ -5,6 +5,7 @@ export type Certificate = {
   issuer: string;
   date: string;
   href?: string;
+  logo?: string; // brand key for components/ios/TechLogo
   details: string[];
 };
 
@@ -13,6 +14,7 @@ export type Achievement = {
   organization: string;
   date: string;
   href?: string;
+  logo?: string; // brand key for components/ios/TechLogo
   details: string[];
 };
 
@@ -20,6 +22,7 @@ export const certificates: Certificate[] = [
   {
     title: 'Machine Learning Specialization',
     issuer: 'Stanford Online & DeepLearning.AI (Coursera)',
+    logo: 'coursera',
     date: '2026',
     href: 'https://coursera.org/share/46613b0d105fbe9ed9309343bad7bead',
     details: [
@@ -40,6 +43,7 @@ export const achievements: Achievement[] = [
   {
     title: 'Open-source contributor, GSSoC 2026 (completed)',
     organization: 'GirlScript Summer of Code',
+    logo: 'gssoc',
     date: '2026',
     details: [
       'Selected as a contributor in one of India’s largest open-source programs, and completed the 2026 cohort.',

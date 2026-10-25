@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { ChevronDown, Award, Trophy } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import PageShell from '../components/ios/PageShell';
-import AppIcon from '../components/ios/AppIcon';
+import Tile from '../components/ios/Tile';
 import { InsetGroup } from '../components/ios/InsetList';
 import Sponsors from '../components/ui/Sponsors';
 import { certificates, achievements } from '../data/achievements';
@@ -63,7 +63,7 @@ const Certificates = () => (
         <ExpandableRow
           key={i}
           entry={{ ...a, source: a.organization }}
-          icon={<AppIcon icon={Trophy} color="orange" size={32} />}
+          icon={<Tile logo={a.logo} icon={Trophy} color="orange" size={34} />}
         />
       ))}
     </InsetGroup>
@@ -72,7 +72,7 @@ const Certificates = () => (
     {certificates.length > 0 && (
     <InsetGroup title={`Certifications · ${certificates.length}`}>
       {certificates.map((c, i) => (
-        <ExpandableRow key={i} entry={{ ...c, source: c.issuer }} icon={<AppIcon icon={Award} color="blue" size={32} />} />
+        <ExpandableRow key={i} entry={{ ...c, source: c.issuer }} icon={<Tile logo={c.logo} icon={Award} color="blue" size={34} />} />
       ))}
     </InsetGroup>
     )}

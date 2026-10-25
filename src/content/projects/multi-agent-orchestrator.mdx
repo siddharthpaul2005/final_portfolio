@@ -6,3 +6,7 @@ A local-first, always-on daemon written in Go that supervises polyglot AI agents
 - **Typed contracts:** gRPC/Protobuf definitions cover agent registration, task dispatch and server-streamed logs. Generated Go and Python stubs let agents in either language share one interface.
 - **Agent registry:** The daemon tracks every agent it supervises.
 - **In progress:** Heartbeat-based failure detection and a task dispatcher built on top of the registry.
+
+## Part of ALFRED
+
+This daemon is the orchestration core of [ALFRED](/projects/alfred), my personal Jarvis-style assistant: it supervises ALFRED's ten Python agents and enforces its safety gate.

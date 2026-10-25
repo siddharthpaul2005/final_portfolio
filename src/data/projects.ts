@@ -7,6 +7,7 @@ export type Project = {
   description: string;
   github: string; // empty string hides the link
   demo?: string;
+  demoLabel?: string; // button text for the demo link (default "OPEN")
   image?: string;
   tags: string[]; // first tag is the area: systems | dev | ML | quant
   status: ProjectStatus;
@@ -16,7 +17,19 @@ export type Project = {
 };
 
 export const projects: Project[] = [
-  // ---- Featured (from the resume) ----
+  // ---- Featured ----
+  {
+    id: 0,
+    slug: 'alfred',
+    title: 'ALFRED',
+    description:
+      'A personal, Jarvis-style assistant: a Go orchestrator and ten Python agents over gRPC, planned by an LLM, with a safety gate on every action, a kill switch and a hash-chained audit log.',
+    github: '',
+    tags: ['systems', 'Go', 'Python', 'gRPC', 'LLM Agents'],
+    status: 'in progress',
+    date: '2026 – Present',
+    featured: true,
+  },
   {
     id: 1,
     slug: 'disktree',
@@ -47,7 +60,7 @@ export const projects: Project[] = [
     slug: 'multi-agent-orchestrator',
     title: 'Multi-Agent Orchestration Daemon',
     description:
-      'Local-first, always-on Go daemon that supervises polyglot AI agents as isolated OS processes, with typed gRPC/Protobuf contracts.',
+      'The core of ALFRED: a local-first, always-on Go daemon that supervises polyglot AI agents as isolated OS processes, with typed gRPC/Protobuf contracts.',
     github: 'https://github.com/siddharthpaul2005/Multidomal_MultiLangage_Agentic_Daemon_Application',
     tags: ['systems', 'Go', 'Python', 'gRPC', 'Protobuf'],
     status: 'in progress',
@@ -110,11 +123,37 @@ export const projects: Project[] = [
     id: 11,
     slug: 'stock-price-predictor',
     title: 'Stock Price Predictor',
-    description: 'Multi-stock price and movement prediction from historical data, comparing Linear Regression, Random Forest and an LSTM prototype.',
+    description: 'Multi-stock next-day prediction from technical indicators (SMA/EMA, RSI, Bollinger Bands): up/down classification and next-day price regression with scikit-learn.',
     github: '',
-    demo: '', // PLACEHOLDER: Colab notebook link
+    demo: 'https://colab.research.google.com/drive/1CHv8UQIuw5AckniTngmEGYw6xvfYDYne?usp=sharing',
+    demoLabel: 'Colab',
     tags: ['quant', 'Python', 'scikit-learn', 'yFinance', 'Pandas'],
     status: 'completed',
+  },
+  {
+    id: 12,
+    slug: 'pairs-trading-nifty200',
+    title: 'Pairs Trading on NIFTY 200',
+    description:
+      'Echelon Strategies’ first study: walk-forward statistical arbitrage on NIFTY 200 futures with C++ cointegration, HMM and backtest engines, full Indian F&O costs and a locked holdout.',
+    github: '',
+    demo: 'https://colab.research.google.com/drive/1vcKTIAkGAghPD9kDl3rGZEXVwK9nfi7Z?usp=sharing',
+    demoLabel: 'Colab',
+    tags: ['quant', 'C++', 'Python', 'Pandas', 'NumPy'],
+    status: 'completed',
+    date: '2026',
+  },
+  {
+    id: 13,
+    slug: 'aida',
+    title: 'AIDA: AI, Derived Not Assumed',
+    description:
+      'My blog and ML knowledge repository: machine learning derived from first principles, with LaTeX proofs, PyTorch from scratch and an interactive knowledge graph.',
+    github: '',
+    demo: 'https://aida-derive.vercel.app/',
+    tags: ['ML', 'PyTorch', 'Mathematics', 'Vercel'],
+    status: 'in progress',
+    date: '2026',
   },
 ];
 

@@ -21,6 +21,8 @@ export const site = {
   timezone: 'Asia/Kolkata',
   // Resume PDF: drop the file at public/assets/Siddharth_Paul_Resume.pdf
   resumePath: '/assets/Siddharth_Paul_Resume.pdf',
+  // Formspree form IDs are public (they appear in every form submission), so a default here is safe.
+  formspreeId: import.meta.env?.VITE_FORMSPREE_FORM_ID || 'mvkkgbke', // env is undefined in Node scripts
 };
 
 export const education = {

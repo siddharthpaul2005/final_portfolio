@@ -1,37 +1,24 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import {
-  ArrowRight,
-  Mail,
-  FileText,
-  PenLine,
-  RefreshCw,
-  Hammer,
-  PencilRuler,
-  BookOpen,
-  Search,
-  ChevronDown,
-  Coffee,
-  GitPullRequest,
-  MapPin,
-  type LucideIcon,
-} from 'lucide-react';
+import { ArrowRight, Mail, FileText, RefreshCw, ChevronDown, Coffee, MapPin, ArrowUpRight, Sigma, LineChart, Satellite, PenLine } from 'lucide-react';
+import type { IconColor } from '../components/ios/AppIcon';
 import Widget, { WidgetLabel } from '../components/ios/Widget';
-import AppIcon, { type IconColor } from '../components/ios/AppIcon';
 import { ListRow } from '../components/ios/InsetList';
 import ActivityHeatmap from '../components/ActivityHeatmap';
 import LogoMark from '../components/ios/LogoMark';
+import TechLogo from '../components/ios/TechLogo';
 import { toolGroups } from '../data/uses';
 import { GithubIcon, LinkedinIcon, XIcon } from '../components/icons/SocialIcons';
 import { profile } from '../data/profile';
 import { socials } from '../data/socials';
 import { site, education } from '../data/site';
-import { now, type NowItem, type NowKind } from '../data/now';
+import { now, type NowItem } from '../data/now';
 import { projects, featuredProjects } from '../data/projects';
 import { skills } from '../data/skills';
 import { blogPostsData } from '../data/blogs';
-import { projectIcons, fallbackIcon, statusLabel } from '../data/projectMeta';
+import { projectImages, projectLogos, statusLabel } from '../data/projectMeta';
+import Tile from '../components/ios/Tile';
 
 const reveal = {
   initial: { opacity: 0, y: 20 },
@@ -254,7 +241,7 @@ const Profile = () => {
           className="lg lg-press mt-6 flex items-center gap-3 rounded-[18px] px-3.5 py-3"
         >
           <span className="relative z-[2] flex min-w-0 flex-1 items-center gap-3">
-            <AppIcon icon={Hammer} color="green" size={34} />
+            <Tile img={now.active[0].img} logo={now.active[0].logo} icon={now.active[0].icon} color={now.active[0].color} size={34} />
             <span className="min-w-0">
               <span className="block text-[11.5px] font-semibold uppercase tracking-[0.06em] text-label-2">Currently building</span>
               <span className="block truncate text-[15px] font-semibold text-foreground">{now.active[0].title}</span>
@@ -287,20 +274,12 @@ const Profile = () => {
 
 /* ---------- Currently working on: lock-screen notification stack ---------- */
 
-const kindMeta: Record<NowKind, { icon: LucideIcon; color: IconColor }> = {
-  Building: { icon: Hammer, color: 'green' },
-  Designing: { icon: PencilRuler, color: 'purple' },
-  Learning: { icon: BookOpen, color: 'blue' },
-  Contributing: { icon: GitPullRequest, color: 'pink' },
-  'Looking for': { icon: Search, color: 'orange' },
-};
 
 const Notification = ({ item }: { item: NowItem }) => {
-  const meta = kindMeta[item.kind];
   const body = (
     <div className="lg rounded-[22px] p-3.5 sm:p-4">
       <div className="relative z-[2] flex gap-3">
-        <AppIcon icon={meta.icon} color={meta.color} size={38} />
+        <Tile img={item.img} logo={item.logo} icon={item.icon} color={item.color} size={38} />
         <div className="min-w-0 flex-1">
           <div className="flex items-center justify-between gap-3">
             <p className="text-[11.5px] font-semibold uppercase tracking-[0.06em] text-label-2">{item.kind}</p>
@@ -434,6 +413,92 @@ const CodingActivity = () => (
 const toolkitTools = toolGroups.flatMap((g) => g.tools);
 const shippedTools = toolkitTools.filter((t) => t.proof).length;
 
+/* ---------- Research & writing: the blog I run and the research group I'm part of ---------- */
+
+const outlets = [
+  {
+    name: 'AIDA',
+    role: 'My blog · ML knowledge repository',
+    pitch: 'Artificial Intelligence, Derived Not Assumed: where I write up machine learning from first principles, with LaTeX proofs and PyTorch from scratch.',
+    facts: ['Blog posts', 'Formal proofs', 'Knowledge graph'],
+    site: 'https://aida-derive.vercel.app/',
+    more: { to: '/projects/aida', label: 'About AIDA' },
+    icon: Sigma,
+    color: 'purple' as IconColor,
+    side: false,
+  },
+  {
+    name: 'Echelon Strategies',
+    role: 'Quant research group',
+    pitch: 'A small research group I run with Ankur Saha and Souradeep Bhattacharya, studying markets as a signal-processing problem with rigorous, falsifiable studies and our own C++ tooling.',
+    facts: ['Statistical arbitrage', 'First study: pairs trading'],
+    site: 'https://echeleonstrategiesweb.vercel.app/',
+    more: { to: '/projects/pairs-trading-nifty200', label: 'First study' },
+    icon: LineChart,
+    color: 'indigo' as IconColor,
+    side: true,
+  },
+  {
+    name: 'Autonomous FDIR for CubeSats',
+    role: 'Research · Solid Propulsion',
+    pitch: 'Joint research with a friend from Aerospace Engineering: autonomous fault detection, isolation and recovery for CubeSat satellites.',
+    facts: ['Aerospace', 'Fault tolerance', 'Ongoing'],
+    site: '',
+    more: { to: '/now', label: 'On Now' },
+    icon: Satellite,
+    color: 'blue' as IconColor,
+    side: false,
+  },
+];
+
+const ResearchAndWriting = () => (
+  <motion.section {...reveal}>
+    <SectionTitle>Research &amp; Writing</SectionTitle>
+    <div className="grid gap-3 sm:grid-cols-2">
+      {outlets.map((v) => (
+        <div
+          key={v.name}
+          className={`flex flex-col rounded-[24px] p-5 ${v.side ? 'side-surface' : 'lg'}`}
+        >
+          <div className="relative z-[2] flex h-full flex-col">
+            <div className="flex items-start justify-between gap-2">
+              <Tile icon={v.icon} color={v.color} size={44} />
+              {v.side && (
+                <span className="inline-flex items-center gap-1 rounded-full border border-dashed border-[var(--label-2)] px-2 py-0.5 text-[11px] font-semibold text-label-2">
+                  <Coffee className="h-3 w-3" /> On the side
+                </span>
+              )}
+            </div>
+            <h3 className="font-display mt-4 text-[20px] font-bold text-foreground">{v.name}</h3>
+            <p className="text-[12.5px] font-medium text-label-2">{v.role}</p>
+            <p className="mt-2 text-[14px] leading-relaxed text-label-2">{v.pitch}</p>
+            <div className="mt-3 flex flex-wrap gap-1.5">
+              {v.facts.map((f) => (
+                <span key={f} className="rounded-full bg-[var(--lg-tint)] px-2.5 py-1 text-[12px] font-medium text-foreground/85">{f}</span>
+              ))}
+            </div>
+            <div className="mt-auto flex flex-wrap items-center gap-2 pt-5">
+              {v.site && (
+                <a
+                  href={v.site}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 rounded-full bg-foreground px-3.5 py-1.5 text-[13px] font-semibold text-background hover:opacity-85"
+                >
+                  Visit site <ArrowUpRight className="h-3.5 w-3.5" />
+                </a>
+              )}
+              <Link to={v.more.to} className="text-[13px] font-semibold text-[#0a84ff] hover:opacity-80">
+                {v.more.label} →
+              </Link>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </motion.section>
+);
+
 const ToolkitPreview = () => (
   <motion.section {...reveal}>
     <SectionTitle
@@ -478,11 +543,10 @@ const ProjectsList = () => (
     <div className="lg overflow-hidden rounded-[24px]">
       <div className="relative z-[2]">
         {featuredProjects.map((p) => {
-          const meta = projectIcons[p.slug] ?? fallbackIcon;
           return (
             <ListRow
               key={p.slug}
-              icon={<AppIcon icon={meta.icon} color={meta.color} size={40} />}
+              icon={<Tile img={projectImages[p.slug]} logo={projectLogos[p.slug]} size={40} />}
               title={p.title}
               subtitle={<span className="line-clamp-1">{p.description}</span>}
               detail={<span className="hidden sm:inline text-[12.5px]">{statusLabel[p.status]}</span>}
@@ -611,7 +675,7 @@ const WritingWidget = () => {
   return (
     <Widget size="small" index={3} to={slug ? `/blog/${slug}` : '/blog'} label="Latest writing">
       <div className="flex h-full flex-col">
-        <AppIcon icon={PenLine} color="orange" size={32} />
+        <Tile icon={PenLine} color="orange" size={34} />
         <div className="mt-auto min-w-0">
           <WidgetLabel className="mb-1">Latest post</WidgetLabel>
           <p className="text-[13.5px] font-semibold leading-snug text-foreground line-clamp-2">
@@ -645,7 +709,10 @@ const Stack = () => {
       <div className="flex flex-wrap gap-2">
         {items.map((item) => (
           <span key={item} className="lg rounded-full px-3 py-1.5 text-[13px] font-medium text-foreground">
-            <span className="relative z-[2]">{item}</span>
+            <span className="relative z-[2] inline-flex items-center gap-1.5">
+              <TechLogo name={item} size={14} />
+              {item}
+            </span>
           </span>
         ))}
       </div>
@@ -713,6 +780,7 @@ const Home = () => (
     <NowStack />
     <CodingActivity />
     <ProjectsList />
+    <ResearchAndWriting />
     <ToolkitPreview />
     <Widgets />
     <Stack />
