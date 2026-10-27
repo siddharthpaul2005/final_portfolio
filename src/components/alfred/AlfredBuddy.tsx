@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { useAlfred } from './alfredStore';
+import { useAlfred, type AlfredSubject } from './alfredStore';
 import { starterSkills } from './skills';
 import AlfredChat, { CHAT_WIDTH } from './AlfredChat';
 
@@ -21,8 +21,8 @@ const KEEP_AWAY = 48; // stop this far from the cursor so it never blocks clicks
 const EASE = 0.045; // pull toward the target per frame
 const MAX_SPEED = 4.5; // px per frame at 60fps
 const SMOOTHING = 0.12; // how quickly velocity follows the pull
-const TOUCH_NAP_MS = 6000; // on touch devices, doze off again after a tap
 const GREETED_KEY = 'alfred_greeted';
+const LONG_PRESS_MS = 550;
 
 // A round little head on stubby feet: 'o' outline, '.' open face (no dot), 'a' antenna bobble.
 const BODY = [
@@ -74,11 +74,26 @@ const DOT_CLASS = {
   mouth: 'fill-current',
 };
 
-// Mouse-driven following needs a fine pointer; also respect reduced motion.
+// ALFRED follows the cursor, or on phones the last place you touched; it stays put for
+// visitors who prefer reduced motion.
 const canFollow = () =>
-  typeof window !== 'undefined' &&
-  window.matchMedia('(hover: hover) and (pointer: fine)').matches &&
-  !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  typeof window !== 'undefined' && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const isTouch = () => typeof window !== 'undefined' && !window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+const squash = (s: string) => s.replace(/\s+/g, ' ').trim();
+
+// What a long-pressed element is about: the nearest card, link, heading or paragraph around it.
+const describe = (target: Element): AlfredSubject | null => {
+  const el = target.closest('a, button, li, h1, h2, h3, p, img, figure, section') ?? target;
+  const context = squash(el instanceof HTMLImageElement ? el.alt : (el as HTMLElement).innerText ?? '').slice(0, 300);
+  if (!context) return null;
+  // A short name for the bubble: the element's heading if it has one, else its first words.
+  const heading = el.querySelector?.('h1, h2, h3, [class*="font-semibold"], [class*="font-medium"]');
+  const name = squash((heading as HTMLElement | null)?.innerText || context);
+  const label = name.length > 32 ? `${name.slice(0, 30).trimEnd()}…` : name;
+  return { label, context };
+};
 
 // Find a heading on the current page by its text ("Projects", "Achievements · 5", ...).
 const findSection = (name: string) => {
@@ -103,10 +118,11 @@ const perchPoint = () => {
 };
 
 const AlfredBuddy = () => {
-  const { mood, bubble, chatOpen, trip, register, run, sleep, wake, setMood, openChat, closeChat, holdBubble, endTrip, say } =
+  const { mood, bubble, offer, chatOpen, trip, register, run, sleep, wake, setMood, openChat, closeChat, holdBubble, endTrip, say, acceptOffer, hush } =
     useAlfred();
   const navigate = useNavigate();
   const [follow] = useState(canFollow);
+  const [touch] = useState(isTouch);
   const rootRef = useRef<HTMLDivElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);
   const chatRef = useRef<HTMLDivElement>(null);
@@ -146,7 +162,7 @@ const AlfredBuddy = () => {
     starterSkills.forEach(register);
   }, [register]);
 
-  // Without a mouse to follow, ALFRED just naps on its perch.
+  // With reduced motion, ALFRED just naps on its perch.
   useEffect(() => {
     if (!follow) setMood('sleeping');
   }, [follow, setMood]);
@@ -174,25 +190,64 @@ const AlfredBuddy = () => {
     const mouse = { x: 0, y: 0, seen: false };
     let frame = 0;
     let last = performance.now();
-    let awakeSince = last;
-    let lastMood = useAlfred.getState().mood;
     let side = { right: true, below: false };
     let lookKey = '0,0';
+    // Set by a long press: ALFRED walks over even though its bubble is showing.
+    let summoned = false;
 
+    // Mouse moves, plus touches (taps and drags) on phones.
     const onMove = (e: PointerEvent) => {
       mouse.x = e.clientX;
       mouse.y = e.clientY;
       mouse.seen = true;
     };
 
+    // Long press (touch) on something: ALFRED comes over and offers to explain it.
+    let press: { x: number; y: number; target: Element; timer: ReturnType<typeof setTimeout> } | null = null;
+    let pressFired = false; // until the next touch: the finger lifting shouldn't open a link
+    const cancelPress = () => {
+      if (press) clearTimeout(press.timer);
+      press = null;
+    };
+    const firePress = () => {
+      if (!press) return;
+      const subject = describe(press.target);
+      cancelPress();
+      if (!subject) return;
+      pressFired = true;
+      navigator.vibrate?.(12);
+      summoned = true;
+      useAlfred.getState().offerHelp(subject);
+    };
+    const onPressStart = (e: PointerEvent) => {
+      cancelPress();
+      pressFired = false;
+      if (e.pointerType !== 'touch' || !(e.target instanceof Element) || e.target.closest('[data-alfred]')) return;
+      press = { x: e.clientX, y: e.clientY, target: e.target, timer: setTimeout(firePress, LONG_PRESS_MS) };
+    };
+    const onPressMove = (e: PointerEvent) => {
+      if (press && Math.hypot(e.clientX - press.x, e.clientY - press.y) > 10) cancelPress();
+    };
+    // Android opens its own long-press menu at about the same moment: ALFRED's offer wins.
+    const onContextMenu = (e: Event) => {
+      if (press || pressFired) {
+        e.preventDefault();
+        firePress();
+      }
+    };
+    const onClickCapture = (e: MouseEvent) => {
+      if (pressFired) {
+        pressFired = false;
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    };
+
     const tick = (now: number) => {
       const dt = Math.min(3, (now - last) / 16.67); // frames elapsed at 60fps
       last = now;
-      const { mood, chatOpen, bubble } = useAlfred.getState();
-      if (mood !== lastMood) {
-        if (mood === 'awake') awakeSince = now;
-        lastMood = mood;
-      }
+      const { mood, chatOpen, bubble, offer } = useAlfred.getState();
+      if (!offer) summoned = false;
       const perch = perchPoint();
       if (!pos) pos = { ...perch };
 
@@ -201,8 +256,7 @@ const AlfredBuddy = () => {
         pos.x = perch.x;
         pos.y = perch.y;
         vel.x = vel.y = 0;
-        if (!follow && mood === 'awake' && !chatOpen && now - awakeSince > TOUCH_NAP_MS) setMood('sleeping');
-      } else if ((mood === 'awake' && !chatOpen && !bubble) || mood === 'heading') {
+      } else if (((mood === 'awake' || summoned) && !chatOpen && (!bubble || summoned)) || mood === 'heading') {
         let tx: number;
         let ty: number;
         if (mood === 'heading') {
@@ -216,6 +270,7 @@ const AlfredBuddy = () => {
           const reach = Math.max(0, d - KEEP_AWAY);
           tx = pos.x + (dx / d) * reach;
           ty = pos.y + (dy / d) * reach;
+          if (summoned && reach < 6) summoned = false; // arrived: hold still for the offer
         }
         let wx = (tx - pos.x) * EASE;
         let wy = (ty - pos.y) * EASE;
@@ -230,7 +285,7 @@ const AlfredBuddy = () => {
         pos.y += vel.y * dt;
 
         if (mood === 'heading' && Math.hypot(perch.x - pos.x, perch.y - pos.y) < 2) setMood('sleeping');
-        if (mood === 'awake') {
+        if (mood !== 'heading') {
           pos.x = Math.max(4, Math.min(window.innerWidth - W - 4, pos.x));
           pos.y = Math.max(4, Math.min(window.innerHeight - H - 4, pos.y));
         }
@@ -283,6 +338,15 @@ const AlfredBuddy = () => {
     };
 
     window.addEventListener('pointermove', onMove, { passive: true });
+    window.addEventListener('pointerdown', onMove, { passive: true });
+    if (follow) {
+      window.addEventListener('pointerdown', onPressStart, { passive: true });
+      window.addEventListener('pointermove', onPressMove, { passive: true });
+      window.addEventListener('pointerup', cancelPress, { passive: true });
+      window.addEventListener('pointercancel', cancelPress, { passive: true });
+      window.addEventListener('contextmenu', onContextMenu);
+      window.addEventListener('click', onClickCapture, true);
+    }
     frame = requestAnimationFrame(tick);
 
     // Greet first-time visitors once.
@@ -300,6 +364,14 @@ const AlfredBuddy = () => {
 
     return () => {
       window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerdown', onMove);
+      window.removeEventListener('pointerdown', onPressStart);
+      window.removeEventListener('pointermove', onPressMove);
+      window.removeEventListener('pointerup', cancelPress);
+      window.removeEventListener('pointercancel', cancelPress);
+      window.removeEventListener('contextmenu', onContextMenu);
+      window.removeEventListener('click', onClickCapture, true);
+      cancelPress();
       cancelAnimationFrame(frame);
       clearTimeout(greetTimer);
     };
@@ -310,6 +382,12 @@ const AlfredBuddy = () => {
   const lit = new Map(faceDots(face, look).map(([c, r, kind]) => [`${c},${r}`, kind]));
 
   const onClick = () => {
+    // On phones a tap on ALFRED goes straight to the chat.
+    if (touch) {
+      if (chatOpen) return closeChat();
+      wake();
+      return openChat();
+    }
     if (mood === 'sleeping' || mood === 'heading') wake();
     else if (chatOpen) closeChat();
     else if (mood === 'awake') run('quip');
@@ -323,6 +401,7 @@ const AlfredBuddy = () => {
         className="pointer-events-none fixed left-0 top-0 z-[60] text-foreground"
         style={{ width: W, height: H, willChange: 'transform', visibility: 'hidden' }}
         aria-live="polite"
+        data-alfred
       >
         {/* Speech bubble */}
         <AnimatePresence>
@@ -340,7 +419,20 @@ const AlfredBuddy = () => {
             >
               <div className="relative z-[2]">
                 <p className="text-[12.5px] leading-snug text-foreground">{bubble}</p>
-                {mood === 'awake' && (
+                {offer ? (
+                  <div className="mt-1.5 flex items-center gap-3">
+                    <button
+                      type="button"
+                      onClick={acceptOffer}
+                      className="text-[11.5px] font-semibold text-[#2563eb] hover:underline dark:text-[#60a5fa]"
+                    >
+                      Yes, tell me
+                    </button>
+                    <button type="button" onClick={hush} className="text-[11px] font-medium text-label-2 hover:text-foreground">
+                      No thanks
+                    </button>
+                  </div>
+                ) : mood === 'awake' && (
                   <div className="mt-1.5 flex items-center gap-3">
                     <button
                       type="button"

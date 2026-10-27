@@ -1140,6 +1140,21 @@ body {
 .alfred-typing i:nth-child(2) { animation-delay: 0.15s; }
 .alfred-typing i:nth-child(3) { animation-delay: 0.3s; }
 
+/* Long press summons ALFRED on touch screens, so it replaces the phone's own long-press
+   menu and text selection there (form fields stay selectable). */
+@media (hover: none) {
+  body {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  input,
+  textarea {
+    -webkit-user-select: text;
+    user-select: text;
+  }
+}
+
 @keyframes alfred-typing {
   0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
   30% { opacity: 1; transform: translateY(-2px); }

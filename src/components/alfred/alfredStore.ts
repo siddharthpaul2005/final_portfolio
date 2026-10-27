@@ -27,11 +27,19 @@ export type AlfredContext = {
 /** A place ALFRED offers to take the visitor (go=false) or takes them right away (go=true). */
 export type AlfredAction = { path: string; section?: string; label: string; go: boolean };
 
-export type ChatTurn = { role: 'user' | 'assistant'; content: string; action?: AlfredAction };
+/** `shown` is a shorter version of `content` for the chat window (content goes to the model). */
+export type ChatTurn = { role: 'user' | 'assistant'; content: string; shown?: string; action?: AlfredAction };
+
+/** Something the visitor long-pressed: a short name for the bubble, and the text around it. */
+export type AlfredSubject = { label: string; context: string };
 
 type AlfredState = {
   mood: AlfredMood;
   bubble: string | null;
+  /** While set, the bubble asks whether the visitor wants info about this subject. */
+  offer: AlfredSubject | null;
+  offerHelp: (subject: AlfredSubject) => void;
+  acceptOffer: () => void;
   skills: Record<string, AlfredSkill>;
   /** Chat with visitors (answered by api/alfred.ts). ALFRED holds still while it's open. */
   chatOpen: boolean;
@@ -43,7 +51,7 @@ type AlfredState = {
   endTrip: () => void;
   openChat: () => void;
   closeChat: () => void;
-  ask: (question: string) => Promise<void>;
+  ask: (question: string, shown?: string) => Promise<void>;
   setMood: (mood: AlfredMood) => void;
   /** Walk to the perch and fall asleep there. */
   sleep: () => void;
@@ -60,6 +68,7 @@ type AlfredState = {
 const ASLEEP_KEY = 'alfred_asleep';
 const WAKING_MS = 1400;
 const BUBBLE_LINGER_MS = 2000;
+const OFFER_MS = 7000;
 
 const readAsleep = () => {
   try {
@@ -83,11 +92,27 @@ let wakingTimer: ReturnType<typeof setTimeout> | undefined;
 export const useAlfred = create<AlfredState>((set, get) => ({
   mood: readAsleep() ? 'sleeping' : 'awake',
   bubble: null,
+  offer: null,
   skills: {},
   chatOpen: false,
   chat: [],
   thinking: false,
   trip: null,
+
+  offerHelp: (subject) => {
+    get().wake();
+    clearTimeout(bubbleTimer);
+    set({ bubble: `Need info about “${subject.label}”?`, offer: subject });
+    bubbleTimer = setTimeout(() => set({ bubble: null, offer: null }), OFFER_MS);
+  },
+
+  acceptOffer: () => {
+    const subject = get().offer;
+    if (!subject) return;
+    get().openChat();
+    const around = subject.context && subject.context !== subject.label ? ` It says: "${subject.context}"` : '';
+    void get().ask(`Tell me about "${subject.label}" on this page.${around}`.slice(0, 600), `Tell me about “${subject.label}”`);
+  },
 
   takeTo: (action) => set({ trip: action, chatOpen: false }),
   endTrip: () => set({ trip: null }),
@@ -99,10 +124,10 @@ export const useAlfred = create<AlfredState>((set, get) => ({
 
   closeChat: () => set({ chatOpen: false }),
 
-  ask: async (question) => {
+  ask: async (question, shown) => {
     const text = question.trim();
     if (!text || get().thinking) return;
-    const chat: ChatTurn[] = [...get().chat, { role: 'user', content: text }];
+    const chat: ChatTurn[] = [...get().chat, { role: 'user', content: text, shown }];
     set({ chat, thinking: true });
     let reply: string;
     let action: AlfredAction | undefined;
@@ -155,18 +180,18 @@ export const useAlfred = create<AlfredState>((set, get) => ({
 
   say: (text, ms = 4500) => {
     clearTimeout(bubbleTimer);
-    set({ bubble: text });
+    set({ bubble: text, offer: null });
     bubbleTimer = setTimeout(() => set({ bubble: null }), ms);
   },
 
   hush: () => {
     clearTimeout(bubbleTimer);
-    set({ bubble: null });
+    set({ bubble: null, offer: null });
   },
 
   holdBubble: (hold) => {
     clearTimeout(bubbleTimer);
-    if (!hold && get().bubble) bubbleTimer = setTimeout(() => set({ bubble: null }), BUBBLE_LINGER_MS);
+    if (!hold && get().bubble) bubbleTimer = setTimeout(() => set({ bubble: null, offer: null }), BUBBLE_LINGER_MS);
   },
 
   register: (skill) => set((s) => ({ skills: { ...s.skills, [skill.name]: skill } })),

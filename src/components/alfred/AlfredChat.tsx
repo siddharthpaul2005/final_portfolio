@@ -53,6 +53,7 @@ const AlfredChat = forwardRef<HTMLDivElement>((_, ref) => {
       ref={ref}
       role="dialog"
       aria-label="Chat with ALFRED"
+      data-alfred
       className="lg-chrome fixed left-0 top-0 z-[61] flex max-w-[calc(100vw-16px)] flex-col rounded-[18px]"
       style={{ width: CHAT_WIDTH, visibility: 'hidden' }}
     >
@@ -95,7 +96,7 @@ const AlfredChat = forwardRef<HTMLDivElement>((_, ref) => {
                 m.role === 'user' ? 'bg-[#2563eb] text-white' : 'bg-black/[0.06] dark:bg-white/10 text-foreground'
               }`}
             >
-              {m.role === 'assistant' ? withLinks(m.content) : m.content}
+              {m.role === 'assistant' ? withLinks(m.content) : m.shown ?? m.content}
             </p>
             {m.action && (
               <button
