@@ -1,6 +1,6 @@
 import { forwardRef, useEffect, useRef, useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ArrowUp, X } from 'lucide-react';
+import { ArrowRight, ArrowUp, Moon, X } from 'lucide-react';
 import { useAlfred } from './alfredStore';
 
 /**
@@ -25,7 +25,7 @@ const withLinks = (text: string): ReactNode[] =>
   );
 
 const AlfredChat = forwardRef<HTMLDivElement>((_, ref) => {
-  const { chat, thinking, ask, closeChat, takeTo } = useAlfred();
+  const { chat, thinking, ask, closeChat, takeTo, sleep } = useAlfred();
   const [draft, setDraft] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
@@ -59,14 +59,24 @@ const AlfredChat = forwardRef<HTMLDivElement>((_, ref) => {
     >
       <div className="relative z-[2] flex items-center justify-between px-3.5 pb-1.5 pt-3">
         <p className="text-[13px] font-semibold text-foreground">Ask ALFRED</p>
-        <button
-          type="button"
-          onClick={closeChat}
-          aria-label="Close chat"
-          className="grid h-6 w-6 place-items-center rounded-full text-label-2 hover:bg-black/5 dark:hover:bg-white/10 hover:text-foreground"
-        >
-          <X className="h-3.5 w-3.5" />
-        </button>
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            onClick={sleep}
+            className="inline-flex h-6 items-center gap-1 rounded-full px-2 text-[11px] font-medium text-label-2 hover:bg-black/5 dark:hover:bg-white/10 hover:text-foreground"
+          >
+            <Moon className="h-3 w-3" />
+            Put to sleep
+          </button>
+          <button
+            type="button"
+            onClick={closeChat}
+            aria-label="Close chat"
+            className="grid h-6 w-6 place-items-center rounded-full text-label-2 hover:bg-black/5 dark:hover:bg-white/10 hover:text-foreground"
+          >
+            <X className="h-3.5 w-3.5" />
+          </button>
+        </div>
       </div>
 
       <div ref={listRef} className="relative z-[2] flex max-h-[260px] flex-col gap-2 overflow-y-auto px-3.5 py-1">

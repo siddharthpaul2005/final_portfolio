@@ -194,9 +194,12 @@ const AlfredBuddy = () => {
     let lookKey = '0,0';
     // Set by a long press: ALFRED walks over even though its bubble is showing.
     let summoned = false;
+    // On phones ALFRED doesn't follow taps: it stays on its perch, comes over on a long press,
+    // and walks back home once the visitor is done with it.
+    let away = false;
 
-    // Mouse moves, plus touches (taps and drags) on phones.
     const onMove = (e: PointerEvent) => {
+      if (e.pointerType === 'touch') return;
       mouse.x = e.clientX;
       mouse.y = e.clientY;
       mouse.seen = true;
@@ -211,12 +214,17 @@ const AlfredBuddy = () => {
     };
     const firePress = () => {
       if (!press) return;
-      const subject = describe(press.target);
+      const { x, y, target } = press;
+      const subject = describe(target);
       cancelPress();
       if (!subject) return;
       pressFired = true;
       navigator.vibrate?.(12);
+      mouse.x = x;
+      mouse.y = y;
+      mouse.seen = true;
       summoned = true;
+      away = true;
       useAlfred.getState().offerHelp(subject);
     };
     const onPressStart = (e: PointerEvent) => {
@@ -250,16 +258,17 @@ const AlfredBuddy = () => {
       if (!offer) summoned = false;
       const perch = perchPoint();
       if (!pos) pos = { ...perch };
+      const goingHome = away && mood === 'awake' && !summoned && !offer && !chatOpen && !bubble;
 
       if (mood === 'sleeping' || (mood === 'awake' && (!mouse.seen || !follow)) || (mood === 'waking' && !mouse.seen)) {
         // Resting on the perch; it scrolls with the page.
         pos.x = perch.x;
         pos.y = perch.y;
         vel.x = vel.y = 0;
-      } else if (((mood === 'awake' || summoned) && !chatOpen && (!bubble || summoned)) || mood === 'heading') {
+      } else if (((mood === 'awake' || summoned) && !chatOpen && (!bubble || summoned)) || mood === 'heading' || goingHome) {
         let tx: number;
         let ty: number;
-        if (mood === 'heading') {
+        if (mood === 'heading' || goingHome) {
           tx = perch.x;
           ty = perch.y;
         } else {
@@ -284,8 +293,13 @@ const AlfredBuddy = () => {
         pos.x += vel.x * dt;
         pos.y += vel.y * dt;
 
-        if (mood === 'heading' && Math.hypot(perch.x - pos.x, perch.y - pos.y) < 2) setMood('sleeping');
-        if (mood !== 'heading') {
+        const home = Math.hypot(perch.x - pos.x, perch.y - pos.y) < 2;
+        if (mood === 'heading' && home) setMood('sleeping');
+        if (goingHome && home) {
+          away = false;
+          mouse.seen = false; // back to resting on the perch
+        }
+        if (mood !== 'heading' && !goingHome) {
           pos.x = Math.max(4, Math.min(window.innerWidth - W - 4, pos.x));
           pos.y = Math.max(4, Math.min(window.innerHeight - H - 4, pos.y));
         }
