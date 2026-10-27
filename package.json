@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "preview": "vite preview",
-    "build": "npx tsx scripts/generate-feed.ts && vite build",
+    "build": "npx tsx scripts/generate-feed.ts && npx tsx scripts/generate-alfred-pages.ts && vite build",
     "typecheck": "tsc --noEmit -p .",
     "prepare": "husky"
   },

@@ -1104,3 +1104,53 @@ body {
     background-color: hsl(var(--card)) !important;
   }
 }
+
+/* ---------- ALFRED companion (components/alfred) ---------- */
+.alfred-bob {
+  animation: alfred-bob 2.4s ease-in-out infinite;
+}
+
+@keyframes alfred-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+
+.alfred-breathe {
+  transform-origin: 50% 100%;
+  animation: alfred-breathe 3.6s ease-in-out infinite;
+}
+
+@keyframes alfred-breathe {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(0.965); }
+}
+
+.alfred-pulse {
+  animation: alfred-pulse 2s ease-in-out infinite;
+}
+
+@keyframes alfred-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+
+.alfred-typing i {
+  animation: alfred-typing 1s ease-in-out infinite;
+}
+.alfred-typing i:nth-child(2) { animation-delay: 0.15s; }
+.alfred-typing i:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes alfred-typing {
+  0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
+  30% { opacity: 1; transform: translateY(-2px); }
+}
+
+.alfred-zzz {
+  animation: alfred-zzz 2.2s ease-in-out infinite;
+}
+
+@keyframes alfred-zzz {
+  0% { opacity: 0; transform: translate(0, 4px); }
+  40% { opacity: 1; }
+  100% { opacity: 0; transform: translate(4px, -6px); }
+}

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search } from 'lucide-react';
 import { socials } from '../data/socials';
+import { useAlfred } from './alfred/alfredStore';
 import useThemeStore from '../store/useThemeStore';
 
 interface CommandPaletteProps {
@@ -257,6 +258,19 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose: propOn
       shortcut: 'Shift+L',
       category: 'actions',
       action: () => window.open(socials.linkedin, '_blank')
+    },
+    {
+      id: 'toggle-alfred',
+      title: useAlfred.getState().mood === 'sleeping' ? 'Wake ALFRED' : 'Put ALFRED to sleep',
+      description: 'Send the little assistant to nap beside the page title, or wake it up',
+      shortcut: 'Shift+A',
+      category: 'actions',
+      action: () => {
+        const { mood, sleep, wake } = useAlfred.getState();
+        if (mood === 'sleeping' || mood === 'heading') wake();
+        else sleep();
+        onClose();
+      }
     }
   ];
 

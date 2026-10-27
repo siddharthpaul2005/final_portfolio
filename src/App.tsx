@@ -3,6 +3,7 @@ import { AnimatePresence } from 'framer-motion';
 import SEO from './components/SEO';
 import TopBar from './components/ios/TopBar';
 import Dock from './components/ios/Dock';
+import AlfredBuddy from './components/alfred/AlfredBuddy';
 import Wallpaper from './components/layout/Wallpaper';
 import Footer from './components/layout/Footer';
 import Home from './pages/Home';
@@ -70,6 +71,7 @@ const App = () => {
         </main>
         <Footer />
         <Dock />
+        <AlfredBuddy />
         <CommandPalette
           isOpen={isCommandPaletteOpen}
           onClose={() => setCommandPaletteOpen(false)}

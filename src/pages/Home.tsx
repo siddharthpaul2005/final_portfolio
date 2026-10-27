@@ -203,7 +203,7 @@ const Profile = () => {
 
       <div className="mt-5 flex flex-col gap-4 px-1 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="font-display text-[30px] sm:text-[34px] font-bold leading-tight text-foreground">{profile.name}</h1>
+          <h1 data-alfred-perch className="font-display text-[30px] sm:text-[34px] font-bold leading-tight text-foreground">{profile.name}</h1>
           <p className="mt-0.5 text-[14px] text-label-2">{profile.tagline}</p>
           <p className="mt-1.5 inline-flex items-center gap-1.5 text-[13px] text-label-2">
             <MapPin className="h-3.5 w-3.5" />
